@@ -281,7 +281,7 @@ function Visualization() {
                             {row.allocs.map((a) => (
                                 <Tooltip
                                     key={a.address}
-                                    title={`${a.type} (${formatHex(a.size)}) @ ${formatHex(a.address)}`}
+                                    title={`${a.type} #${a.groupId} (${formatHex(a.size)}) @ ${formatHex(a.address)}`}
                                     arrow
                                 >
                                     <Box
@@ -323,7 +323,7 @@ function Visualization() {
                                                 textShadow: '0 1px 1px rgba(255,255,255,0.6)',
                                             }}
                                         >
-                                            {a.type} ({formatHex(a.size)})
+                                            {a.type} #{a.groupId} ({formatHex(a.size)})
                                         </Box>
                                         {selected === a.address && (
                                             <Box
@@ -354,6 +354,7 @@ interface RowAllocSegment {
     requestedPct: number
     size: number
     type: string
+    groupId: number
     color: string
     actualSize: number
 }
@@ -371,7 +372,7 @@ interface RowEntry {
 }
 
 function buildRows(
-    list: { address: number; actualSize: number; size: number; type: string; color: string }[],
+    list: { address: number; actualSize: number; size: number; groupId: number; type: string; color: string }[],
     rowSize: number,
     base: number,
     collapse: { enabled: boolean; threshold: number }
@@ -424,6 +425,7 @@ function buildRows(
                 leftPct,
                 widthPct,
                 requestedPct,
+                groupId: a.groupId,
                 size: a.size,
                 type: a.type,
                 color: a.color,
