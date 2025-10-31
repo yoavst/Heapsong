@@ -55,7 +55,7 @@ function App() {
         <ThemeProvider theme={theme}>
             <CssBaseline />
             <ToastProvider>
-                <BrowserRouter>
+                <BrowserRouter basename='/Heapsong'>
                     <Routes>
                         <Route path="/" element={<LoadScreen />} />
                         <Route path="/viz.html" element={<VisualizerScreen />} />

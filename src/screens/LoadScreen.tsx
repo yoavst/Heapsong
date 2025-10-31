@@ -60,7 +60,7 @@ export default function LoadScreen() {
 
     const loadSample = useCallback(async () => {
         try {
-            const res = await fetch('/sample-heap.json')
+            const res = await fetch('./sample-heap.json')
             const json = await res.json()
             const entries = Array.isArray(json) ? json : json.entries
             const normalized = normalizeAllocations(entries)
