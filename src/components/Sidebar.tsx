@@ -184,8 +184,8 @@ function SettingsTab() {
     const [hydrated, setHydrated] = useState(false)
     // load once
     useEffect(() => {
-        const savedCollapse = localStorage.getItem('heapo:collapse')
-        const savedDefaults = localStorage.getItem('heapo:defaults')
+        const savedCollapse = localStorage.getItem('heapsong:collapse')
+        const savedDefaults = localStorage.getItem('heapsong:defaults')
         if (savedCollapse) {
             try {
                 const parsed = JSON.parse(savedCollapse)
@@ -215,13 +215,13 @@ function SettingsTab() {
     }, [])
     // persist on change
     useEffect(() => {
-        localStorage.setItem('heapo:collapse', JSON.stringify(collapse))
+        localStorage.setItem('heapsong:collapse', JSON.stringify(collapse))
     }, [collapse])
 
     useEffect(() => {
         if (!hydrated) return
         localStorage.setItem(
-            'heapo:defaults',
+            'heapsong:defaults',
             JSON.stringify({
                 base: defaults.base === '' ? null : defaults.base,
                 end: defaults.end === '' ? null : defaults.end,

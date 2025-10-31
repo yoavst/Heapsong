@@ -21,7 +21,7 @@ function App() {
     const setPendingFilters = useSetAtom(pendingFiltersAtom)
     useEffect(() => {
         try {
-            const saved = localStorage.getItem('heapo:collapse')
+            const saved = localStorage.getItem('heapsong:collapse')
             if (saved) {
                 const parsed = JSON.parse(saved)
                 if (parsed && typeof parsed === 'object') {
@@ -37,7 +37,7 @@ function App() {
     // Hydrate default row size into filters, so TopBar shows the saved default after refresh
     useEffect(() => {
         try {
-            const savedDefaults = localStorage.getItem('heapo:defaults')
+            const savedDefaults = localStorage.getItem('heapsong:defaults')
             if (savedDefaults) {
                 const d = JSON.parse(savedDefaults)
                 const row = Number.isFinite(d?.row) ? Number(d.row) : null

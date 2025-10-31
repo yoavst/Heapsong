@@ -54,7 +54,7 @@ export default function VisualizerScreen() {
 
     useEffect(() => {
         if (heap) return
-        const cached = localStorage.getItem('heapo:lastHeap')
+        const cached = localStorage.getItem('heapsong:lastHeap')
         if (!cached) {
             navigate('/')
             return
@@ -67,7 +67,7 @@ export default function VisualizerScreen() {
             const sorted = normalized.slice().sort((a, b) => a.address - b.address)
             setHeap(sorted)
             const { min, max } = computeAddressBounds(sorted)
-            const defaultsRaw = localStorage.getItem('heapo:defaults')
+            const defaultsRaw = localStorage.getItem('heapsong:defaults')
             let base = min,
                 end = max,
                 row = 0x1000
@@ -84,7 +84,7 @@ export default function VisualizerScreen() {
             setPending(next)
             show('Restored last heap', 'info')
         } catch {
-            localStorage.removeItem('heapo:lastHeap')
+            localStorage.removeItem('heapsong:lastHeap')
             navigate('/')
         }
     }, [heap, navigate, setApplied, setHeap, setPending, show])

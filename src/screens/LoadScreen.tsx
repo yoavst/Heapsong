@@ -29,11 +29,11 @@ export default function LoadScreen() {
                 setHeap(sorted)
                 // persist last heap
                 try {
-                    localStorage.setItem('heapo:lastHeap', JSON.stringify(entries))
+                    localStorage.setItem('heapsong:lastHeap', JSON.stringify(entries))
                 } catch {}
                 const { min, max } = computeAddressBounds(sorted)
                 // apply defaults if configured
-                const defaultsRaw = localStorage.getItem('heapo:defaults')
+                const defaultsRaw = localStorage.getItem('heapsong:defaults')
                 let base = min,
                     end = max,
                     row = 0x1000
@@ -67,11 +67,11 @@ export default function LoadScreen() {
             const sorted = normalized.slice().sort((a, b) => a.address - b.address)
             setHeap(sorted)
             try {
-                localStorage.setItem('heapo:lastHeap', JSON.stringify(entries))
+                localStorage.setItem('heapsong:lastHeap', JSON.stringify(entries))
             } catch {}
             const { min, max } = computeAddressBounds(sorted)
             // defaults from localStorage
-            const defaultsRaw = localStorage.getItem('heapo:defaults')
+            const defaultsRaw = localStorage.getItem('heapsong:defaults')
             let base = min,
                 end = max,
                 row = 0x1000
