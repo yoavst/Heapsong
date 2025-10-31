@@ -1,0 +1,79 @@
+I want to write a react website the visualize memory of a program (aka heap)
+The app consist of two screens:
+1. Load heap dump. I'll will explain later what is the format for the heap. But it is a single json file. The GUI for the screen would be a a rectangle for a drag and drop area, and a background for the screen. When clicking it, it will open a file selection screen, but it also supports drag and drop.
+When importing a file, it will validate the format. If it is invalid, it will show a detailed error message.
+After importing it will move to the next screen.
+2. The main screen - heap visualizer screen. The layout of the screen is:
+
+               top bar
+================================
+visualization |   side bar
+
+You can drop the side bar border to increase/decrease its size.
+
+The top bar consist of:
+1. Small Logo of the app, let's call it "HeapSong". 
+2. input box for base address. When applied, the app will only shows allocations above this address. If changed and not applied, it will change the text color to represent that.
+3. input box for end address. When applied, the app will only shows allocations under this address. If changed and not applied, it will change the text color to represent that
+4. input box for row size. The visualization will be in rows which are multiple of this size. If changed and not applied ....
+5. Button for applying the changes. Also pressing enter when modifying input will apply them all.
+
+Visualization:
+We have rows of memory. It is scrollable between base and end address. I assume there are at most 1000 allocations so each allocation can be represented by an html element. Each row has an empty area for unused allocation size. For each allocation, there will be a rectangle with:
+- The allocation color as background
+- The text on the allocation will be ALLOCATION_TYPE (ALLOCATION_SIZE).
+- On hovering the allocation there will be extra info about the allocation.
+- Clicking the allocation will open the detail of it in the side bar.
+- Allocation have two sizes - the requested size for the malloc, and the actual allocated size. The extra unrequested size will be a bit less brightened to represent that.
+Between two allocations over the empty area there will be a number of the space between the allocation and the next one.
+There is a toggle (in the settings) that switches between two mode
+- Normal - if there is an empty row or more between allocations, show it (as empty row)
+- Collapse empty rows - If there are at least N empty rows (configurable in settings), collapse them to a single collapsed line (write on the line the size of total collapsed)
+
+Side bar:
+The side bar will consists of few tabs:
+1. Search screen:
+This the default screen for the side bar. It consist of
+Search box (20%) of the height (can be dragged to change size). Here you can write a javascript lambda that will filter the event shown on this list. that lambda will receive e as the event. The box will look like:
+(grayed out (e) =>) and then the user can write the filter. It will have autocomplete for the common fields names in the format. On pressing the search button, it will filter the events on the list
+List of allocation (40%) - show all the allocations, with their left border colored by the color of the allocation. They are grouped by "group_id" (which has a title). Each entry text is ALLOCATION_TYPE (SIZE) => ADDR and they are aligned nicely. When clicking an allocation on the list, it will jump to it in the visualization screen, and show its metadata (the json representing it) in this screen. When right clicking it will just show the info and do not jump.
+There will be a color for the selected element.
+The order is by the address.
+Finally, allocation info (30%) - Each allocation has a json with all its info. So it will show in tree view the json, highlighting numbers in hex, supporting collapsing tree if there was an object here. Clicking a number should copy it (and show a toast that it has copied). 
+
+
+3. Setting:
+Here we can change the following settings (and they will persist through multiple files using local storage)
+- Default base address
+- Default end address
+- Default row size
+- Default theme color (the app can change the theme color)
+- Enable/Disable + configure amount of empty rows for the collapse empty rows feature
+
+
+-----
+Shortcuts:
+G will open an "alert box" (not actual alert(), styled one), that asks for an address and then jump to it (show toast of an error if it is not in range, format wrong, etc...)
+
+------------
+Json format:
+Each entry have:
+{
+"type": string,
+"address": either int or hex string,
+"size": either int or hex string,
+"actual_size": either int or hex string, (represents the size actually allocated)
+"color": rgb string (#123456) this is optional, has default color if not exist,
+"group_id": int, the group id of the allocation. 
+<extra fields can come here and they are not validated>
+}
+
+-----------
+The site will be in react and use modern idioms. It is suggested to use the existing package.json as baseline. Use MUI for ui.
+Ensure components are functional and use hooks where appropriate. Optimize for performance.
+Make sure the app looks modern and good
+
+-----------
+Please write a POC for this app
+
+
