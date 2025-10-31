@@ -58,7 +58,7 @@ function App() {
                 <BrowserRouter>
                     <Routes>
                         <Route path="/" element={<LoadScreen />} />
-                        <Route path="/viz" element={<VisualizerScreen />} />
+                        <Route path="/viz.html" element={<VisualizerScreen />} />
                         <Route path="*" element={<Navigate to="/" replace />} />
                     </Routes>
                 </BrowserRouter>

@@ -4,7 +4,7 @@
     "version": "2.0.0",
     "scripts": {
         "start": "vite",
-        "build": "tsc --noEmit && vite build",
+        "build": "tsc --noEmit && vite build && cp dist/index.html dist/viz.html",
         "lint": "eslint .",
         "format": "npx prettier . --write",
         "format:check": "npx prettier . --check",

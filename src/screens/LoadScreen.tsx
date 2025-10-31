@@ -49,7 +49,7 @@ export default function LoadScreen() {
                 setApplied(next)
                 setPending(next)
                 show('Heap loaded successfully', 'success')
-                navigate('/viz')
+                navigate('/viz.html')
             } catch (e) {
                 const message = e instanceof Error ? e.message : 'Invalid file'
                 show(`Invalid heap file: ${message}`, 'error')
@@ -87,7 +87,7 @@ export default function LoadScreen() {
             setApplied(next)
             setPending(next)
             show('Loaded sample heap', 'success')
-            navigate('/viz')
+            navigate('/viz.html')
         } catch (e) {
             const message = e instanceof Error ? e.message : 'Failed to load sample'
             show(message, 'error')
