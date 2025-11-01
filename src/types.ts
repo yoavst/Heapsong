@@ -1,17 +1,3 @@
-export type HexOrNumber = number | string
-
-export interface Allocation {
-    // required
-    type: string
-    address: HexOrNumber
-    size: HexOrNumber
-    actual_size: HexOrNumber
-    color?: string
-    group_id: number
-    // allow any extra fields
-    [key: string]: unknown
-}
-
 export interface NormalizedAllocation {
     type: string
     address: number
@@ -28,8 +14,6 @@ export interface AppliedFilters {
     endAddress: number | null
     rowSize: number
 }
-
-export interface PendingFilters extends AppliedFilters {}
 
 export interface SettingsData {
     defaultBaseAddress: number | null

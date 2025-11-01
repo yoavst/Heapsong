@@ -3,8 +3,8 @@ import { Box, Button, Paper, Typography, useTheme } from '@mui/material'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 
 interface DropFileProps {
-    samplePath: string | null
     onData: (data: string) => void
+    samplePath?: string
 }
 
 export default function DropFile({ samplePath, onData }: DropFileProps) {

@@ -14,27 +14,22 @@ import { useAtom, useSetAtom } from 'jotai'
 import {
     appliedFiltersAtom,
     heapAllocationsAtom,
-    pendingFiltersAtom,
     selectedAddressAtom,
     sidebarWidthAtom,
     collapseEmptyRowsAtom,
     highlightRowBaseAtom,
 } from '../state/atoms'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { formatHex } from '../utils/input'
+import { formatHex } from '../utils/formatting'
 import { useToast } from '../components/ToastContext'
-import { parseInput, computeAddressBounds } from '../utils/input'
 import { useNavigate } from 'react-router-dom'
 
 export default function VisualizerScreen() {
     const [sidebarWidth, setSidebarWidth] = useAtom(sidebarWidthAtom)
     const [dragging, setDragging] = useState(false)
     const dividerRef = useRef<HTMLDivElement | null>(null)
-    const [heap, setHeap] = useAtom(heapAllocationsAtom)
-    const [, setApplied] = useAtom(appliedFiltersAtom)
-    const [, setPending] = useAtom(pendingFiltersAtom)
+    const [heap] = useAtom(heapAllocationsAtom)
     const navigate = useNavigate()
-    const { show } = useToast()
 
     useEffect(() => {
         function onMove(e: MouseEvent) {
@@ -53,39 +48,11 @@ export default function VisualizerScreen() {
     }, [dragging, setSidebarWidth])
 
     useEffect(() => {
-        if (heap) return
-        const cached = localStorage.getItem('heapsong:lastHeap')
-        if (!cached) {
-            navigate('/')
+        if (!heap) {
+            void navigate('/')
             return
         }
-        try {
-            const entries = JSON.parse(cached)
-            const normalized = parseInput(entries)
-            const sorted = normalized.slice().sort((a, b) => a.address - b.address)
-            setHeap(sorted)
-            const { min, max } = computeAddressBounds(sorted)
-            const defaultsRaw = localStorage.getItem('heapsong:defaults')
-            let base = min,
-                end = max,
-                row = 0x1000
-            if (defaultsRaw) {
-                try {
-                    const d = JSON.parse(defaultsRaw)
-                    base = Number.isFinite(d.base) ? d.base : base
-                    end = Number.isFinite(d.end) ? d.end : end
-                    row = Number.isFinite(d.row) ? d.row : row
-                } catch {}
-            }
-            const next = { baseAddress: base, endAddress: end, rowSize: row }
-            setApplied(next)
-            setPending(next)
-            show('Restored last heap', 'info')
-        } catch {
-            localStorage.removeItem('heapsong:lastHeap')
-            navigate('/')
-        }
-    }, [heap, navigate, setApplied, setHeap, setPending, show])
+    }, [heap, navigate])
 
     return (
         <Box sx={{ height: '100vh', width: '100vw', display: 'flex', flexDirection: 'column' }}>

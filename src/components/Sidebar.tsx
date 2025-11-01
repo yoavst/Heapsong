@@ -7,15 +7,21 @@ import {
     Tabs,
     TextField,
     Typography,
-    Stack,
     Button,
-    InputAdornment,
 } from '@mui/material'
 import { useAtom } from 'jotai'
-import { collapseEmptyRowsAtom, heapAllocationsAtom, selectedAddressAtom } from '../state/atoms'
-import { useEffect, useMemo, useState } from 'react'
+import {
+    collapseEmptyRowsAtom,
+    DEFAULT_ROW_SIZE,
+    defaultFiltersAtom,
+    heapAllocationsAtom,
+    selectedAddressAtom,
+} from '../state/atoms'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import JsonTree from './JsonTree'
-import { formatHex } from '../utils/input'
+import { formatHex } from '../utils/formatting'
+import HexInput from './HexInput'
+import { AppliedFilters } from '../types'
 
 function groupBy<T, K extends string | number>(list: T[], key: (t: T) => K): Record<K, T[]> {
     const map = new Map<K, T[]>()
@@ -175,60 +181,13 @@ function SearchTab() {
 
 function SettingsTab() {
     const [collapse, setCollapse] = useAtom(collapseEmptyRowsAtom)
-    const [defaults, setDefaults] = useState<{ base: number | ''; end: number | ''; row: number }>({
-        base: '',
-        end: '',
-        row: 0x1000,
-    })
-    const [rowText, setRowText] = useState<string>('1000')
-    const [hydrated, setHydrated] = useState(false)
-    // load once
-    useEffect(() => {
-        const savedCollapse = localStorage.getItem('heapsong:collapse')
-        const savedDefaults = localStorage.getItem('heapsong:defaults')
-        if (savedCollapse) {
-            try {
-                const parsed = JSON.parse(savedCollapse)
-                if (parsed && typeof parsed === 'object') {
-                    setCollapse({
-                        enabled: Boolean(parsed.enabled),
-                        threshold: Math.max(1, Number(parsed.threshold) || 4),
-                    })
-                }
-            } catch {}
-        }
+    const [defaultFilters, setDefaultFilters] = useAtom(defaultFiltersAtom)
+    const pendingDefaultFilterChanges = useRef<Partial<AppliedFilters>>({})
 
-        if (savedDefaults) {
-            try {
-                const d = JSON.parse(savedDefaults)
-                setDefaults({
-                    base: Number.isFinite(d.base) ? d.base : '',
-                    end: Number.isFinite(d.end) ? d.end : '',
-                    row: Number.isFinite(d.row) ? d.row : 0x1000,
-                })
-                const initialRow = Number.isFinite(d.row) ? Number(d.row) : 0x1000
-                setRowText(initialRow.toString(16).toUpperCase())
-            } catch {}
-        }
-        setHydrated(true)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-    // persist on change
-    useEffect(() => {
-        localStorage.setItem('heapsong:collapse', JSON.stringify(collapse))
-    }, [collapse])
+    const applyDefaultFilterChanges = useCallback(() => {
+        setDefaultFilters({ ...defaultFilters, ...pendingDefaultFilterChanges.current })
+    }, [defaultFilters, setDefaultFilters])
 
-    useEffect(() => {
-        if (!hydrated) return
-        localStorage.setItem(
-            'heapsong:defaults',
-            JSON.stringify({
-                base: defaults.base === '' ? null : defaults.base,
-                end: defaults.end === '' ? null : defaults.end,
-                row: defaults.row,
-            })
-        )
-    }, [defaults, hydrated])
     return (
         <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
             <FormControlLabel
@@ -242,6 +201,7 @@ function SettingsTab() {
                 }
                 label="Collapse empty rows"
             />
+
             <TextField
                 label="Collapse threshold (rows)"
                 type="number"
@@ -253,87 +213,51 @@ function SettingsTab() {
                         threshold: Math.max(1, parseInt(e.target.value || '1', 10)),
                     })
                 }}
-                InputProps={{ inputProps: { min: 1 } }}
+                slotProps={{
+                    input: { inputProps: { min: 1 } },
+                }}
             />
             <Divider />
-            <Typography variant="subtitle2">Defaults</Typography>
-            <Stack
-                direction="row"
-                sx={{ flexWrap: 'wrap', '& .MuiFormControl-root': { flex: '1 1 220px' } }}
-            >
-                <TextField
-                    fullWidth
-                    label="Default base"
-                    size="small"
-                    placeholder="0x0"
-                    value={
-                        defaults.base === ''
-                            ? ''
-                            : `0x${Number(defaults.base).toString(16).toUpperCase()}`
+            <Typography variant="subtitle2">Default Parameters</Typography>
+            <HexInput
+                label="Base address"
+                placeholder="0"
+                apply={applyDefaultFilterChanges}
+                defaultValue={defaultFilters.baseAddress}
+                setValue={(value) => {
+                    pendingDefaultFilterChanges.current = {
+                        ...pendingDefaultFilterChanges,
+                        baseAddress: value,
                     }
-                    onChange={(e) => {
-                        const v = e.target.value.trim()
-                        if (v === '') setDefaults((d) => ({ ...d, base: '' }))
-                        else {
-                            const n = v.startsWith('0x') ? parseInt(v, 16) : parseInt(v, 10)
-                            if (!Number.isNaN(n)) setDefaults((d) => ({ ...d, base: n }))
-                        }
-                    }}
-                    sx={{ minWidth: 220 }}
-                />
-                <TextField
-                    fullWidth
-                    label="Default end"
-                    size="small"
-                    placeholder="0xFFFF"
-                    value={
-                        defaults.end === ''
-                            ? ''
-                            : `0x${Number(defaults.end).toString(16).toUpperCase()}`
+                }}
+            />
+            <HexInput
+                label="End address"
+                placeholder="FF..FF"
+                apply={applyDefaultFilterChanges}
+                defaultValue={defaultFilters.endAddress}
+                setValue={(value) => {
+                    pendingDefaultFilterChanges.current = {
+                        ...pendingDefaultFilterChanges,
+                        endAddress: value,
                     }
-                    onChange={(e) => {
-                        const v = e.target.value.trim()
-                        if (v === '') setDefaults((d) => ({ ...d, end: '' }))
-                        else {
-                            const n = v.startsWith('0x') ? parseInt(v, 16) : parseInt(v, 10)
-                            if (!Number.isNaN(n)) setDefaults((d) => ({ ...d, end: n }))
-                        }
-                    }}
-                    sx={{ minWidth: 220 }}
-                />
-                <TextField
-                    fullWidth
-                    label="Default row size"
-                    size="small"
-                    placeholder="0x1000"
-                    value={rowText}
-                    onChange={(e) => {
-                        const raw = e.target.value.replace(/^0x/i, '')
-                        setRowText(raw.toUpperCase())
-                        if (/^[0-9a-fA-F]+$/.test(raw)) {
-                            const n = parseInt(raw, 16)
-                            if (!Number.isNaN(n))
-                                setDefaults((d) => ({ ...d, row: Math.max(1, n) }))
-                        }
-                    }}
-                    onBlur={() => {
-                        setRowText(Number(defaults.row).toString(16).toUpperCase())
-                    }}
-                    InputProps={{
-                        startAdornment: <InputAdornment position="start">0x</InputAdornment>,
-                    }}
-                    inputProps={{ inputMode: 'text', pattern: '[0-9a-fA-F]*' }}
-                    sx={{ minWidth: 220 }}
-                />
-                <Button
-                    variant="outlined"
-                    onClick={() => {
-                        setDefaults({ base: '', end: '', row: 0x1000 })
-                    }}
-                >
-                    Clear
-                </Button>
-            </Stack>
+                }}
+            />
+            <HexInput
+                label="Row size"
+                placeholder={DEFAULT_ROW_SIZE.toString(16)}
+                apply={applyDefaultFilterChanges}
+                defaultValue={defaultFilters.rowSize}
+                setValue={(value) => {
+                    pendingDefaultFilterChanges.current = {
+                        ...pendingDefaultFilterChanges,
+                        rowSize: value ?? DEFAULT_ROW_SIZE,
+                    }
+                }}
+            />
+            <Button variant="outlined" onClick={applyDefaultFilterChanges}>
+                Apply
+            </Button>
             <Typography variant="caption" color="text.secondary">
                 Settings persist to local storage across files.
             </Typography>

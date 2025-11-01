@@ -19,8 +19,7 @@
         "jotai": "^2.15.0",
         "react": "^19.2.0",
         "react-dom": "^19.2.0",
-        "react-router-dom": "7.0.2",
-        "use-local-storage-state": "^19.5.0"
+        "react-router-dom": "7.0.2"
     },
     "devDependencies": {
         "@eslint/js": "^9.38.0",

@@ -1,4 +1,4 @@
-import type { Allocation, NormalizedAllocation } from '../types'
+import type { NormalizedAllocation } from '../types'
 
 const DEFAULT_COLOR = '#4db6ac'
 
@@ -44,7 +44,7 @@ function parseHexOrNumber(value: unknown): number {
     throw new Error(`Invalid numeric value: ${String(value)}`)
 }
 
-export function parseInput(input: unknown): NormalizedAllocation[] {
+export default function parseInput(input: unknown): NormalizedAllocation[] {
     if (!Array.isArray(input)) throw new Error('Heap JSON must be an array of entries')
     return input.map((raw, idx) => {
         assertInputAllocation(raw)
@@ -68,20 +68,4 @@ export function parseInput(input: unknown): NormalizedAllocation[] {
             color: raw.color ?? DEFAULT_COLOR,
         }
     })
-}
-
-export function computeAddressBounds(list: NormalizedAllocation[]): { min: number; max: number } {
-    let min = Number.POSITIVE_INFINITY
-    let max = 0
-    for (const a of list) {
-        if (a.address < min) min = a.address
-        const end = a.address + a.actualSize
-        if (end > max) max = end
-    }
-    if (!Number.isFinite(min)) min = 0
-    return { min, max }
-}
-
-export function formatHex(n: number): string {
-    return '0x' + n.toString(16)
 }
