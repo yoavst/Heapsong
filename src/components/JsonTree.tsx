@@ -3,38 +3,28 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import { useState } from 'react'
 import { useToast } from './ToastContext'
 
-function isPrimitive(val: unknown) {
-    return val === null || val === undefined || ['string', 'number', 'boolean'].includes(typeof val)
+interface JsonTreeProps {
+    data: unknown
 }
 
-export default function JsonTree({ data }: { data: unknown }) {
-    return (
-        <Box
-            sx={{
-                fontFamily:
-                    'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
-                fontSize: 13,
-            }}
-        >
-            <Node name={undefined} value={data} depth={0} />
-        </Box>
-    )
+interface NodeProps {
+    name: string | undefined
+    value: unknown
+    depth: number
 }
 
-function Node({ name, value, depth }: { name: string | undefined; value: unknown; depth: number }) {
+export default function JsonTree({ data }: JsonTreeProps) {
+    return <Node name={undefined} value={data} depth={0} />
+}
+
+function Node({ name, value, depth }: NodeProps) {
     const { show } = useToast()
     const [open, setOpen] = useState(true)
     const pad = depth * 12
 
-    if (name == 'address') {
-        value = parseInt(value as string, 16)
-    }
+    value = transformValue(value)
 
     if (isPrimitive(value)) {
-        const display =
-            typeof value === 'number'
-                ? `0x${value.toString(16).toUpperCase()}`
-                : JSON.stringify(value)
         return (
             <Stack
                 direction="row"
@@ -42,23 +32,24 @@ function Node({ name, value, depth }: { name: string | undefined; value: unknown
                 spacing={1}
                 sx={{ pl: `${pad}px`, py: 0.25 }}
             >
-                <Typography component="span" sx={{ color: 'text.secondary' }}>
-                    {name ? `${name}: ` : ''}
-                </Typography>
+                {name && (
+                    <Typography component="span" sx={{ color: 'text.secondary' }}>
+                        {name}:
+                    </Typography>
+                )}
                 <Typography
                     component="span"
-                    sx={{ color: typeof value === 'number' ? 'primary.main' : 'text.primary' }}
+                    sx={{ color: isNumeric(value) ? 'primary.main' : 'text.primary' }}
                 >
-                    {display}
+                    {displayValue(value)}
                 </Typography>
-                {typeof value === 'number' && (
+                {isNumeric(value) && (
                     <IconButton
                         size="small"
                         onClick={() => {
-                            void navigator.clipboard.writeText(
-                                '0x' + value.toString(16).toUpperCase()
-                            )
-                            show('Copied', 'success')
+                            const hexValue = `0x${value.toString(16)}`
+                            void navigator.clipboard.writeText(hexValue)
+                            show(`Copied ${hexValue} to clipboard`, 'success')
                         }}
                     >
                         <ContentCopyIcon fontSize="inherit" />
@@ -68,48 +59,7 @@ function Node({ name, value, depth }: { name: string | undefined; value: unknown
         )
     }
 
-    if (value === undefined) {
-        return (
-            <Stack
-                direction="row"
-                alignItems="center"
-                spacing={1}
-                sx={{ pl: `${pad}px`, py: 0.25 }}
-            >
-                <Typography component="span" sx={{ color: 'text.secondary' }}>
-                    {name ? `${name}: ` : ''}
-                </Typography>
-                <Typography component="span" sx={{ color: 'text.disabled' }}>
-                    undefined
-                </Typography>
-            </Stack>
-        )
-    }
     const isArray = Array.isArray(value)
-    if (!isArray && (typeof value !== 'object' || value === null)) {
-        const display =
-            typeof value === 'number'
-                ? `0x${value.toString(16).toUpperCase()}`
-                : JSON.stringify(value)
-        return (
-            <Stack
-                direction="row"
-                alignItems="center"
-                spacing={1}
-                sx={{ pl: `${pad}px`, py: 0.25 }}
-            >
-                <Typography component="span" sx={{ color: 'text.secondary' }}>
-                    {name ? `${name}: ` : ''}
-                </Typography>
-                <Typography
-                    component="span"
-                    sx={{ color: typeof value === 'number' ? 'primary.main' : 'text.primary' }}
-                >
-                    {display}
-                </Typography>
-            </Stack>
-        )
-    }
     const entries = isArray
         ? (value as unknown[])
         : Object.entries(value as Record<string, unknown>)
@@ -139,4 +89,34 @@ function Node({ name, value, depth }: { name: string | undefined; value: unknown
             ) : null}
         </Box>
     )
+}
+
+const isPrimitive = (
+    val: unknown
+): val is null | undefined | string | number | boolean | bigint => {
+    return (
+        val === null ||
+        val === undefined ||
+        ['string', 'number', 'boolean', 'bigint'].includes(typeof val)
+    )
+}
+
+const transformValue = (value: unknown): unknown => {
+    // Try transform hex string to bigint
+    if (typeof value !== 'string' || !(value.startsWith('0x') || value.startsWith('0X')))
+        return value
+    try {
+        return BigInt(value)
+    } catch (_error) {
+        return value
+    }
+}
+
+const isNumeric = (value: unknown): value is number | bigint => {
+    return typeof value === 'bigint' || typeof value === 'number'
+}
+
+const displayValue = (value: unknown): string => {
+    if (isNumeric(value)) return `0x${value.toString(16).toUpperCase()}`
+    return JSON.stringify(value)
 }

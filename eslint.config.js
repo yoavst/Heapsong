@@ -33,7 +33,11 @@ export default tseslint.config(
             ...react.configs.recommended.rules,
             ...react.configs['jsx-runtime'].rules,
             'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
-            '@typescript-eslint/no-unused-vars': ['warn'],
+            '@typescript-eslint/no-unused-vars': ['warn', {
+                "argsIgnorePattern": "^_",
+                "varsIgnorePattern": "^_",
+                "caughtErrorsIgnorePattern": "^_"
+              }],
             '@typescript-eslint/restrict-template-expressions': ['off'],
         },
     }

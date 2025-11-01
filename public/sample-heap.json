@@ -15,7 +15,11 @@
         "actual_size": 128,
         "color": "#81C784",
         "group_id": 1,
-        "owner": "main"
+        "owner": "main",
+        "dict": {
+            "key": "value",
+            "key2": "value2"
+        }
     },
     {
         "type": "ARRAY",
@@ -24,7 +28,8 @@
         "actual_size": 768,
         "color": "#FFB74D",
         "group_id": 2,
-        "elements": 64
+        "elements": 64,
+        "elementsValues": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, { "value": 12 }]
     },
     {
         "type": "NODE",
