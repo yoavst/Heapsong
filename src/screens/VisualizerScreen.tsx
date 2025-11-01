@@ -21,9 +21,9 @@ import {
     highlightRowBaseAtom,
 } from '../state/atoms'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { formatHex } from '../utils/parse'
+import { formatHex } from '../utils/input'
 import { useToast } from '../components/ToastContext'
-import { normalizeAllocations, computeAddressBounds } from '../utils/parse'
+import { parseInput, computeAddressBounds } from '../utils/input'
 import { useNavigate } from 'react-router-dom'
 
 export default function VisualizerScreen() {
@@ -61,9 +61,7 @@ export default function VisualizerScreen() {
         }
         try {
             const entries = JSON.parse(cached)
-            const normalized = normalizeAllocations(
-                Array.isArray(entries) ? entries : entries.entries
-            )
+            const normalized = parseInput(entries)
             const sorted = normalized.slice().sort((a, b) => a.address - b.address)
             setHeap(sorted)
             const { min, max } = computeAddressBounds(sorted)
@@ -372,7 +370,14 @@ interface RowEntry {
 }
 
 function buildRows(
-    list: { address: number; actualSize: number; size: number; groupId: number; type: string; color: string }[],
+    list: {
+        address: number
+        actualSize: number
+        size: number
+        groupId: number
+        type: string
+        color: string
+    }[],
     rowSize: number,
     base: number,
     collapse: { enabled: boolean; threshold: number }

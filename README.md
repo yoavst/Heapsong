@@ -1,10 +1,11 @@
 # HeapSong
-heap visualizer written by cursor completely (so don't even try to look at the code). 
+
+heap visualizer written by cursor completely (so don't even try to look at the code).
 
 ![Screenshot](public/screenshot.png)
 
-
 json input format:
+
 ```
 [
     {

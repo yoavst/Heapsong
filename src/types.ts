@@ -19,11 +19,8 @@ export interface NormalizedAllocation {
     actualSize: number
     color: string
     groupId: number
-    raw: Allocation
-}
 
-export interface HeapFile {
-    entries: Allocation[]
+    [key: string]: unknown
 }
 
 export interface AppliedFilters {

@@ -3,18 +3,18 @@
         "type": "INIT",
         "address": "0x10000",
         "size": "0x80",
-        "actual_size": 160,
+        "actualSize": 160,
         "color": "#64B5F6",
-        "group_id": 1,
+        "groupId": 1,
         "note": "startup block"
     },
     {
         "type": "STRING",
         "address": "0x10400",
         "size": 96,
-        "actual_size": 128,
+        "actualSize": 128,
         "color": "#81C784",
-        "group_id": 1,
+        "groupId": 1,
         "owner": "main",
         "dict": {
             "key": "value",
@@ -25,9 +25,9 @@
         "type": "ARRAY",
         "address": "0x10C00",
         "size": 512,
-        "actual_size": 768,
+        "actualSize": 768,
         "color": "#FFB74D",
-        "group_id": 2,
+        "groupId": 2,
         "elements": 64,
         "elementsValues": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, { "value": 12 }]
     },
@@ -35,24 +35,24 @@
         "type": "NODE",
         "address": "0x13000",
         "size": 64,
-        "actual_size": 96,
+        "actualSize": 96,
         "color": "#E57373",
-        "group_id": 2
+        "groupId": 2
     },
     {
         "type": "CACHE",
         "address": "0x17000",
         "size": 4096,
-        "actual_size": 4096,
+        "actualSize": 4096,
         "color": "#BA68C8",
-        "group_id": 3
+        "groupId": 3
     },
     {
         "type": "BUFFER",
         "address": "0x1A000",
         "size": 2048,
-        "actual_size": 3072,
+        "actualSize": 3072,
         "color": "#4DB6AC",
-        "group_id": 3
+        "groupId": 3
     }
 ]

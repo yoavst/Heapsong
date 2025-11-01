@@ -15,7 +15,7 @@ import { useAtom } from 'jotai'
 import { collapseEmptyRowsAtom, heapAllocationsAtom, selectedAddressAtom } from '../state/atoms'
 import { useEffect, useMemo, useState } from 'react'
 import JsonTree from './JsonTree'
-import { formatHex } from '../utils/parse'
+import { formatHex } from '../utils/input'
 
 function groupBy<T, K extends string | number>(list: T[], key: (t: T) => K): Record<K, T[]> {
     const map = new Map<K, T[]>()
@@ -67,7 +67,7 @@ function SearchTab() {
             const fn = new Function('e', `return (${appliedSrc})`)
             return (e: { raw: unknown }) => {
                 try {
-                    return Boolean((fn as (arg: unknown) => unknown)(e.raw))
+                    return Boolean((fn as (arg: unknown) => unknown)(e))
                 } catch {
                     return false
                 }
@@ -162,7 +162,7 @@ function SearchTab() {
             <Divider />
             <Box sx={{ p: 1.5, minHeight: 120, maxHeight: 240, overflow: 'auto' }}>
                 {selected != null ? (
-                    <JsonTree data={heap?.find((x) => x.address === selected)?.raw} />
+                    <JsonTree data={heap?.find((x) => x.address === selected)} />
                 ) : (
                     <Typography variant="body2" color="text.secondary">
                         Select an allocation to view details
