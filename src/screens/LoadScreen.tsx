@@ -58,6 +58,43 @@ export default function LoadScreen() {
         [setHeap, setApplied, setPending, navigate, show]
     )
 
+    const loadFromClipboard = useCallback(async () => {
+        try {
+            const text = await navigator.clipboard.readText()
+            const json: unknown = JSON.parse(text)
+            const entries = Array.isArray(json) ? json : json.entries
+            const normalized = normalizeAllocations(entries)
+            const sorted = normalized.slice().sort((a, b) => a.address - b.address)
+            setHeap(sorted)
+            // persist last heap
+            try {
+                localStorage.setItem('heapsong:lastHeap', JSON.stringify(entries))
+            } catch {}
+            const { min, max } = computeAddressBounds(sorted)
+            // apply defaults if configured
+            const defaultsRaw = localStorage.getItem('heapsong:defaults')
+            let base = min,
+                end = max,
+                row = 0x1000
+            if (defaultsRaw) {
+                try {
+                    const d = JSON.parse(defaultsRaw)
+                    base = Number.isFinite(d.base) ? d.base : base
+                    end = Number.isFinite(d.end) ? d.end : end
+                    row = Number.isFinite(d.row) ? d.row : row
+                } catch {}
+            }
+            const next = { baseAddress: base, endAddress: end, rowSize: row }
+            setApplied(next)
+            setPending(next)
+            show('Heap loaded successfully', 'success')
+            navigate('/viz.html')
+        } catch(e) {
+            const message = e instanceof Error ? e.message : 'Invalid file'
+                show(`Invalid heap file: ${message}`, 'error')
+        }
+    }, [setHeap, show])
+
     const loadSample = useCallback(async () => {
         try {
             const res = await fetch('./sample-heap.json')
@@ -107,7 +144,7 @@ export default function LoadScreen() {
             <Paper
                 elevation={dragOver ? 8 : 2}
                 sx={{
-                    width: 520,
+                    width: 600,
                     height: 280,
                     borderRadius: 3,
                     border: (theme) =>
@@ -144,6 +181,9 @@ export default function LoadScreen() {
                     <Box mt={2} sx={{ display: 'flex', gap: 1, justifyContent: 'center' }}>
                         <Button variant="contained" onClick={() => fileInputRef.current?.click()}>
                             Choose File
+                        </Button>
+                        <Button variant="contained" onClick={loadFromClipboard}>
+                            Use clipboard
                         </Button>
                         <Button variant="outlined" onClick={loadSample}>
                             Load Sample
