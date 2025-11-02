@@ -87,7 +87,7 @@ function SearchTab() {
     const grouped = useMemo(() => groupBy(filtered, (e) => e.groupId), [filtered])
 
     return (
-        <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 2, height: '100%' }}>
+        <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 2, flex: 1, minHeight: 0 }}>
             <Box>
                 <Typography variant="caption" color="text.secondary">
                     (e) =&gt;

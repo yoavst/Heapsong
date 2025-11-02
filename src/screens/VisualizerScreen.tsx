@@ -171,7 +171,7 @@ function Visualization() {
     return (
         <Box
             ref={containerRef}
-            sx={{ overflow: 'auto', position: 'relative', bgcolor: 'background.default' }}
+            sx={{ overflow: 'auto', position: 'relative', bgcolor: 'background.default', height: '100%' }}
         >
             {rows.map((row) => (
                 <Box
