@@ -8,8 +8,8 @@ interface InputAllocation {
     type: string
     address: HexOrNumber
     size: HexOrNumber
-    actualSize: HexOrNumber
     groupId: HexOrNumber
+    actualSize?: HexOrNumber
     name?: string
     color?: string
     // allow any extra fields
@@ -19,7 +19,6 @@ const InputAllocationRequiredKeys = [
     'type',
     'address',
     'size',
-    'actualSize',
     'groupId',
 ] as const satisfies (keyof InputAllocation)[]
 
@@ -51,7 +50,7 @@ export default function parseInput(input: unknown): NormalizedAllocation[] {
 
         const address = parseHexOrNumber(raw.address)
         const size = parseHexOrNumber(raw.size)
-        const actualSize = parseHexOrNumber(raw.actualSize)
+        const actualSize = parseHexOrNumber(raw.actualSize ?? raw.size)
         const groupId = parseHexOrNumber(raw.groupId)
 
         if (size <= 0 || actualSize < size) {

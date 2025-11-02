@@ -32,6 +32,19 @@ export const heapAllocationsAtom = atomWithStorageOnInit<NormalizedAllocation[] 
     'heapAllocations',
     null
 )
+export const heapAllocationsRangeAtom = atom<[base: number, end: number] | null>((get) => {
+    const heapAllocations = get(heapAllocationsAtom)
+    if (!heapAllocations) return null
+    let base = heapAllocations[0].address
+    let end = heapAllocations[0].address + heapAllocations[0].actualSize
+
+    for (const heapAllocation of heapAllocations) {
+        if (heapAllocation.address < base) base = heapAllocation.address
+        const allocEnd = heapAllocation.address + heapAllocation.actualSize
+        if (allocEnd > end) end = allocEnd
+    }
+    return [base, end]
+})
 
 export const appliedFiltersAtom = atomWithDefault<AppliedFilters>((get) => {
     return { ...get(defaultFiltersAtom) }

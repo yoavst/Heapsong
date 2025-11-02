@@ -1,16 +1,7 @@
-import {
-    Box,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    Button,
-    Tooltip,
-    Typography,
-} from '@mui/material'
+import { Box, Tooltip, Typography } from '@mui/material'
 import TopBar from '../components/TopBar'
 import Sidebar from '../components/sidebar/Sidebar'
-import { useAtom, useSetAtom } from 'jotai'
+import { useAtom } from 'jotai'
 import {
     appliedFiltersAtom,
     heapAllocationsAtom,
@@ -21,8 +12,8 @@ import {
 } from '../state/atoms'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { formatHex } from '../utils/formatting'
-import { useToast } from '../components/ToastContext'
 import { useNavigate } from 'react-router-dom'
+import GotoDialog from '../components/visualizer/GotoDialog'
 
 export default function VisualizerScreen() {
     const [sidebarWidth, setSidebarWidth] = useAtom(sidebarWidthAtom)
@@ -449,94 +440,4 @@ function buildRows(
         i++
     }
     return out
-}
-
-function GotoDialog() {
-    const [open, setOpen] = useState(false)
-    const [input, setInput] = useState('')
-    const [applied] = useAtom(appliedFiltersAtom)
-    const [selected, setSelected] = useAtom(selectedAddressAtom)
-    const setHighlight = useSetAtom(highlightRowBaseAtom)
-    const { show } = useToast()
-
-    useEffect(() => {
-        const onKey = (e: KeyboardEvent) => {
-            if (e.key.toLowerCase() === 'g') setOpen(true)
-        }
-        window.addEventListener('keydown', onKey)
-        return () => {
-            window.removeEventListener('keydown', onKey)
-        }
-    }, [])
-
-    function apply() {
-        const raw = input.trim()
-        if (raw === '') return
-        let n: number
-        if (/^0x/i.test(raw) || /[a-f]/i.test(raw)) {
-            const cleaned = raw.replace(/^0x/i, '')
-            n = parseInt(cleaned, 16)
-        } else {
-            n = parseInt(raw, 10)
-        }
-        if (Number.isNaN(n)) {
-            show('Invalid address', 'error')
-            return
-        }
-        if (applied.baseAddress != null && n < applied.baseAddress) {
-            show(
-                `Address ${formatHex(n)} is below base ${formatHex(applied.baseAddress)}`,
-                'warning'
-            )
-            return
-        }
-        if (applied.endAddress != null && n > applied.endAddress) {
-            show(`Address ${formatHex(n)} is above end ${formatHex(applied.endAddress)}`, 'warning')
-            return
-        }
-        setSelected(n)
-        const base = applied.baseAddress ?? 0
-        const rowSize = Math.max(1, Number(applied.rowSize) || 0x1000)
-        const rowBase = base + Math.floor((n - base) / rowSize) * rowSize
-        setHighlight(rowBase)
-        setTimeout(() => {
-            setHighlight(null)
-        }, 1500)
-        setOpen(false)
-        setInput('')
-    }
-
-    return (
-        <Dialog
-            open={open}
-            onClose={() => {
-                setOpen(false)
-            }}
-        >
-            <DialogTitle>Go to address</DialogTitle>
-            <DialogContent>
-                <input
-                    style={{ width: 320, padding: 8 }}
-                    placeholder="0x1234 or 4660"
-                    value={input}
-                    onChange={(e) => {
-                        setInput(e.target.value)
-                    }}
-                    onKeyDown={(e) => e.key === 'Enter' && apply()}
-                />
-            </DialogContent>
-            <DialogActions>
-                <Button
-                    onClick={() => {
-                        setOpen(false)
-                    }}
-                >
-                    Cancel
-                </Button>
-                <Button variant="contained" onClick={apply}>
-                    Go
-                </Button>
-            </DialogActions>
-        </Dialog>
-    )
 }
