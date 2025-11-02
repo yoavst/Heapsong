@@ -1,0 +1,1802 @@
+[
+  {
+    "type": "EVENT_1",
+    "address": "0x10100",
+    "size": 65,
+    "actualSize": 129,
+    "color": "#016533",
+    "groupId": 2,
+    "note": "test event 1"
+  },
+  {
+    "type": "EVENT_2",
+    "address": "0x10200",
+    "size": 66,
+    "actualSize": 130,
+    "color": "#026634",
+    "groupId": 3,
+    "note": "test event 2"
+  },
+  {
+    "type": "EVENT_3",
+    "address": "0x10300",
+    "size": 67,
+    "actualSize": 131,
+    "color": "#036735",
+    "groupId": 4,
+    "note": "test event 3"
+  },
+  {
+    "type": "EVENT_4",
+    "address": "0x10400",
+    "size": 68,
+    "actualSize": 132,
+    "color": "#046836",
+    "groupId": 5,
+    "note": "test event 4"
+  },
+  {
+    "type": "EVENT_5",
+    "address": "0x10500",
+    "size": 69,
+    "actualSize": 133,
+    "color": "#056937",
+    "groupId": 6,
+    "note": "test event 5"
+  },
+  {
+    "type": "EVENT_6",
+    "address": "0x10600",
+    "size": 70,
+    "actualSize": 134,
+    "color": "#066a38",
+    "groupId": 7,
+    "note": "test event 6"
+  },
+  {
+    "type": "EVENT_7",
+    "address": "0x10700",
+    "size": 71,
+    "actualSize": 135,
+    "color": "#076b39",
+    "groupId": 8,
+    "note": "test event 7"
+  },
+  {
+    "type": "EVENT_8",
+    "address": "0x10800",
+    "size": 72,
+    "actualSize": 136,
+    "color": "#086c3a",
+    "groupId": 9,
+    "note": "test event 8"
+  },
+  {
+    "type": "EVENT_9",
+    "address": "0x10900",
+    "size": 73,
+    "actualSize": 137,
+    "color": "#096d3b",
+    "groupId": 10,
+    "note": "test event 9"
+  },
+  {
+    "type": "EVENT_10",
+    "address": "0x10a00",
+    "size": 74,
+    "actualSize": 138,
+    "color": "#0a6e3c",
+    "groupId": 11,
+    "note": "test event 10"
+  },
+  {
+    "type": "EVENT_11",
+    "address": "0x10b00",
+    "size": 75,
+    "actualSize": 139,
+    "color": "#0b6f3d",
+    "groupId": 12,
+    "note": "test event 11"
+  },
+  {
+    "type": "EVENT_12",
+    "address": "0x10c00",
+    "size": 76,
+    "actualSize": 140,
+    "color": "#0c703e",
+    "groupId": 13,
+    "note": "test event 12"
+  },
+  {
+    "type": "EVENT_13",
+    "address": "0x10d00",
+    "size": 77,
+    "actualSize": 141,
+    "color": "#0d713f",
+    "groupId": 14,
+    "note": "test event 13"
+  },
+  {
+    "type": "EVENT_14",
+    "address": "0x10e00",
+    "size": 78,
+    "actualSize": 142,
+    "color": "#0e7240",
+    "groupId": 15,
+    "note": "test event 14"
+  },
+  {
+    "type": "EVENT_15",
+    "address": "0x10f00",
+    "size": 79,
+    "actualSize": 143,
+    "color": "#0f7341",
+    "groupId": 16,
+    "note": "test event 15"
+  },
+  {
+    "type": "EVENT_16",
+    "address": "0x11000",
+    "size": 80,
+    "actualSize": 144,
+    "color": "#107442",
+    "groupId": 17,
+    "note": "test event 16"
+  },
+  {
+    "type": "EVENT_17",
+    "address": "0x11100",
+    "size": 81,
+    "actualSize": 145,
+    "color": "#117543",
+    "groupId": 18,
+    "note": "test event 17"
+  },
+  {
+    "type": "EVENT_18",
+    "address": "0x11200",
+    "size": 82,
+    "actualSize": 146,
+    "color": "#127644",
+    "groupId": 19,
+    "note": "test event 18"
+  },
+  {
+    "type": "EVENT_19",
+    "address": "0x11300",
+    "size": 83,
+    "actualSize": 147,
+    "color": "#137745",
+    "groupId": 20,
+    "note": "test event 19"
+  },
+  {
+    "type": "EVENT_20",
+    "address": "0x11400",
+    "size": 84,
+    "actualSize": 148,
+    "color": "#147846",
+    "groupId": 1,
+    "note": "test event 20"
+  },
+  {
+    "type": "EVENT_21",
+    "address": "0x11500",
+    "size": 85,
+    "actualSize": 149,
+    "color": "#157947",
+    "groupId": 2,
+    "note": "test event 21"
+  },
+  {
+    "type": "EVENT_22",
+    "address": "0x11600",
+    "size": 86,
+    "actualSize": 150,
+    "color": "#167a48",
+    "groupId": 3,
+    "note": "test event 22"
+  },
+  {
+    "type": "EVENT_23",
+    "address": "0x11700",
+    "size": 87,
+    "actualSize": 151,
+    "color": "#177b49",
+    "groupId": 4,
+    "note": "test event 23"
+  },
+  {
+    "type": "EVENT_24",
+    "address": "0x11800",
+    "size": 88,
+    "actualSize": 152,
+    "color": "#187c4a",
+    "groupId": 5,
+    "note": "test event 24"
+  },
+  {
+    "type": "EVENT_25",
+    "address": "0x11900",
+    "size": 89,
+    "actualSize": 153,
+    "color": "#197d4b",
+    "groupId": 6,
+    "note": "test event 25"
+  },
+  {
+    "type": "EVENT_26",
+    "address": "0x11a00",
+    "size": 90,
+    "actualSize": 154,
+    "color": "#1a7e4c",
+    "groupId": 7,
+    "note": "test event 26"
+  },
+  {
+    "type": "EVENT_27",
+    "address": "0x11b00",
+    "size": 91,
+    "actualSize": 155,
+    "color": "#1b7f4d",
+    "groupId": 8,
+    "note": "test event 27"
+  },
+  {
+    "type": "EVENT_28",
+    "address": "0x11c00",
+    "size": 92,
+    "actualSize": 156,
+    "color": "#1c804e",
+    "groupId": 9,
+    "note": "test event 28"
+  },
+  {
+    "type": "EVENT_29",
+    "address": "0x11d00",
+    "size": 93,
+    "actualSize": 157,
+    "color": "#1d814f",
+    "groupId": 10,
+    "note": "test event 29"
+  },
+  {
+    "type": "EVENT_30",
+    "address": "0x11e00",
+    "size": 94,
+    "actualSize": 158,
+    "color": "#1e8250",
+    "groupId": 11,
+    "note": "test event 30"
+  },
+  {
+    "type": "EVENT_31",
+    "address": "0x11f00",
+    "size": 95,
+    "actualSize": 159,
+    "color": "#1f8351",
+    "groupId": 12,
+    "note": "test event 31"
+  },
+  {
+    "type": "EVENT_32",
+    "address": "0x12000",
+    "size": 96,
+    "actualSize": 160,
+    "color": "#208452",
+    "groupId": 13,
+    "note": "test event 32"
+  },
+  {
+    "type": "EVENT_33",
+    "address": "0x12100",
+    "size": 97,
+    "actualSize": 161,
+    "color": "#218553",
+    "groupId": 14,
+    "note": "test event 33"
+  },
+  {
+    "type": "EVENT_34",
+    "address": "0x12200",
+    "size": 98,
+    "actualSize": 162,
+    "color": "#228654",
+    "groupId": 15,
+    "note": "test event 34"
+  },
+  {
+    "type": "EVENT_35",
+    "address": "0x12300",
+    "size": 99,
+    "actualSize": 163,
+    "color": "#238755",
+    "groupId": 16,
+    "note": "test event 35"
+  },
+  {
+    "type": "EVENT_36",
+    "address": "0x12400",
+    "size": 100,
+    "actualSize": 164,
+    "color": "#248856",
+    "groupId": 17,
+    "note": "test event 36"
+  },
+  {
+    "type": "EVENT_37",
+    "address": "0x12500",
+    "size": 101,
+    "actualSize": 165,
+    "color": "#258957",
+    "groupId": 18,
+    "note": "test event 37"
+  },
+  {
+    "type": "EVENT_38",
+    "address": "0x12600",
+    "size": 102,
+    "actualSize": 166,
+    "color": "#268a58",
+    "groupId": 19,
+    "note": "test event 38"
+  },
+  {
+    "type": "EVENT_39",
+    "address": "0x12700",
+    "size": 103,
+    "actualSize": 167,
+    "color": "#278b59",
+    "groupId": 20,
+    "note": "test event 39"
+  },
+  {
+    "type": "EVENT_40",
+    "address": "0x12800",
+    "size": 104,
+    "actualSize": 168,
+    "color": "#288c5a",
+    "groupId": 1,
+    "note": "test event 40"
+  },
+  {
+    "type": "EVENT_41",
+    "address": "0x12900",
+    "size": 105,
+    "actualSize": 169,
+    "color": "#298d5b",
+    "groupId": 2,
+    "note": "test event 41"
+  },
+  {
+    "type": "EVENT_42",
+    "address": "0x12a00",
+    "size": 106,
+    "actualSize": 170,
+    "color": "#2a8e5c",
+    "groupId": 3,
+    "note": "test event 42"
+  },
+  {
+    "type": "EVENT_43",
+    "address": "0x12b00",
+    "size": 107,
+    "actualSize": 171,
+    "color": "#2b8f5d",
+    "groupId": 4,
+    "note": "test event 43"
+  },
+  {
+    "type": "EVENT_44",
+    "address": "0x12c00",
+    "size": 108,
+    "actualSize": 172,
+    "color": "#2c905e",
+    "groupId": 5,
+    "note": "test event 44"
+  },
+  {
+    "type": "EVENT_45",
+    "address": "0x12d00",
+    "size": 109,
+    "actualSize": 173,
+    "color": "#2d915f",
+    "groupId": 6,
+    "note": "test event 45"
+  },
+  {
+    "type": "EVENT_46",
+    "address": "0x12e00",
+    "size": 110,
+    "actualSize": 174,
+    "color": "#2e9260",
+    "groupId": 7,
+    "note": "test event 46"
+  },
+  {
+    "type": "EVENT_47",
+    "address": "0x12f00",
+    "size": 111,
+    "actualSize": 175,
+    "color": "#2f9361",
+    "groupId": 8,
+    "note": "test event 47"
+  },
+  {
+    "type": "EVENT_48",
+    "address": "0x13000",
+    "size": 112,
+    "actualSize": 176,
+    "color": "#309462",
+    "groupId": 9,
+    "note": "test event 48"
+  },
+  {
+    "type": "EVENT_49",
+    "address": "0x13100",
+    "size": 113,
+    "actualSize": 177,
+    "color": "#319563",
+    "groupId": 10,
+    "note": "test event 49"
+  },
+  {
+    "type": "EVENT_50",
+    "address": "0x13200",
+    "size": 114,
+    "actualSize": 178,
+    "color": "#329664",
+    "groupId": 11,
+    "note": "test event 50"
+  },
+  {
+    "type": "EVENT_51",
+    "address": "0x13300",
+    "size": 115,
+    "actualSize": 179,
+    "color": "#339765",
+    "groupId": 12,
+    "note": "test event 51"
+  },
+  {
+    "type": "EVENT_52",
+    "address": "0x13400",
+    "size": 116,
+    "actualSize": 180,
+    "color": "#349866",
+    "groupId": 13,
+    "note": "test event 52"
+  },
+  {
+    "type": "EVENT_53",
+    "address": "0x13500",
+    "size": 117,
+    "actualSize": 181,
+    "color": "#359967",
+    "groupId": 14,
+    "note": "test event 53"
+  },
+  {
+    "type": "EVENT_54",
+    "address": "0x13600",
+    "size": 118,
+    "actualSize": 182,
+    "color": "#369a68",
+    "groupId": 15,
+    "note": "test event 54"
+  },
+  {
+    "type": "EVENT_55",
+    "address": "0x13700",
+    "size": 119,
+    "actualSize": 183,
+    "color": "#379b69",
+    "groupId": 16,
+    "note": "test event 55"
+  },
+  {
+    "type": "EVENT_56",
+    "address": "0x13800",
+    "size": 120,
+    "actualSize": 184,
+    "color": "#389c6a",
+    "groupId": 17,
+    "note": "test event 56"
+  },
+  {
+    "type": "EVENT_57",
+    "address": "0x13900",
+    "size": 121,
+    "actualSize": 185,
+    "color": "#399d6b",
+    "groupId": 18,
+    "note": "test event 57"
+  },
+  {
+    "type": "EVENT_58",
+    "address": "0x13a00",
+    "size": 122,
+    "actualSize": 186,
+    "color": "#3a9e6c",
+    "groupId": 19,
+    "note": "test event 58"
+  },
+  {
+    "type": "EVENT_59",
+    "address": "0x13b00",
+    "size": 123,
+    "actualSize": 187,
+    "color": "#3b9f6d",
+    "groupId": 20,
+    "note": "test event 59"
+  },
+  {
+    "type": "EVENT_60",
+    "address": "0x13c00",
+    "size": 124,
+    "actualSize": 188,
+    "color": "#3ca06e",
+    "groupId": 1,
+    "note": "test event 60"
+  },
+  {
+    "type": "EVENT_61",
+    "address": "0x13d00",
+    "size": 125,
+    "actualSize": 189,
+    "color": "#3da16f",
+    "groupId": 2,
+    "note": "test event 61"
+  },
+  {
+    "type": "EVENT_62",
+    "address": "0x13e00",
+    "size": 126,
+    "actualSize": 190,
+    "color": "#3ea270",
+    "groupId": 3,
+    "note": "test event 62"
+  },
+  {
+    "type": "EVENT_63",
+    "address": "0x13f00",
+    "size": 127,
+    "actualSize": 191,
+    "color": "#3fa371",
+    "groupId": 4,
+    "note": "test event 63"
+  },
+  {
+    "type": "EVENT_64",
+    "address": "0x14000",
+    "size": 128,
+    "actualSize": 192,
+    "color": "#40a472",
+    "groupId": 5,
+    "note": "test event 64"
+  },
+  {
+    "type": "EVENT_65",
+    "address": "0x14100",
+    "size": 129,
+    "actualSize": 193,
+    "color": "#41a573",
+    "groupId": 6,
+    "note": "test event 65"
+  },
+  {
+    "type": "EVENT_66",
+    "address": "0x14200",
+    "size": 130,
+    "actualSize": 194,
+    "color": "#42a674",
+    "groupId": 7,
+    "note": "test event 66"
+  },
+  {
+    "type": "EVENT_67",
+    "address": "0x14300",
+    "size": 131,
+    "actualSize": 195,
+    "color": "#43a775",
+    "groupId": 8,
+    "note": "test event 67"
+  },
+  {
+    "type": "EVENT_68",
+    "address": "0x14400",
+    "size": 132,
+    "actualSize": 196,
+    "color": "#44a876",
+    "groupId": 9,
+    "note": "test event 68"
+  },
+  {
+    "type": "EVENT_69",
+    "address": "0x14500",
+    "size": 133,
+    "actualSize": 197,
+    "color": "#45a977",
+    "groupId": 10,
+    "note": "test event 69"
+  },
+  {
+    "type": "EVENT_70",
+    "address": "0x14600",
+    "size": 134,
+    "actualSize": 198,
+    "color": "#46aa78",
+    "groupId": 11,
+    "note": "test event 70"
+  },
+  {
+    "type": "EVENT_71",
+    "address": "0x14700",
+    "size": 135,
+    "actualSize": 199,
+    "color": "#47ab79",
+    "groupId": 12,
+    "note": "test event 71"
+  },
+  {
+    "type": "EVENT_72",
+    "address": "0x14800",
+    "size": 136,
+    "actualSize": 200,
+    "color": "#48ac7a",
+    "groupId": 13,
+    "note": "test event 72"
+  },
+  {
+    "type": "EVENT_73",
+    "address": "0x14900",
+    "size": 137,
+    "actualSize": 201,
+    "color": "#49ad7b",
+    "groupId": 14,
+    "note": "test event 73"
+  },
+  {
+    "type": "EVENT_74",
+    "address": "0x14a00",
+    "size": 138,
+    "actualSize": 202,
+    "color": "#4aae7c",
+    "groupId": 15,
+    "note": "test event 74"
+  },
+  {
+    "type": "EVENT_75",
+    "address": "0x14b00",
+    "size": 139,
+    "actualSize": 203,
+    "color": "#4baf7d",
+    "groupId": 16,
+    "note": "test event 75"
+  },
+  {
+    "type": "EVENT_76",
+    "address": "0x14c00",
+    "size": 140,
+    "actualSize": 204,
+    "color": "#4cb07e",
+    "groupId": 17,
+    "note": "test event 76"
+  },
+  {
+    "type": "EVENT_77",
+    "address": "0x14d00",
+    "size": 141,
+    "actualSize": 205,
+    "color": "#4db17f",
+    "groupId": 18,
+    "note": "test event 77"
+  },
+  {
+    "type": "EVENT_78",
+    "address": "0x14e00",
+    "size": 142,
+    "actualSize": 206,
+    "color": "#4eb280",
+    "groupId": 19,
+    "note": "test event 78"
+  },
+  {
+    "type": "EVENT_79",
+    "address": "0x14f00",
+    "size": 143,
+    "actualSize": 207,
+    "color": "#4fb381",
+    "groupId": 20,
+    "note": "test event 79"
+  },
+  {
+    "type": "EVENT_80",
+    "address": "0x15000",
+    "size": 144,
+    "actualSize": 208,
+    "color": "#50b482",
+    "groupId": 1,
+    "note": "test event 80"
+  },
+  {
+    "type": "EVENT_81",
+    "address": "0x15100",
+    "size": 145,
+    "actualSize": 209,
+    "color": "#51b583",
+    "groupId": 2,
+    "note": "test event 81"
+  },
+  {
+    "type": "EVENT_82",
+    "address": "0x15200",
+    "size": 146,
+    "actualSize": 210,
+    "color": "#52b684",
+    "groupId": 3,
+    "note": "test event 82"
+  },
+  {
+    "type": "EVENT_83",
+    "address": "0x15300",
+    "size": 147,
+    "actualSize": 211,
+    "color": "#53b785",
+    "groupId": 4,
+    "note": "test event 83"
+  },
+  {
+    "type": "EVENT_84",
+    "address": "0x15400",
+    "size": 148,
+    "actualSize": 212,
+    "color": "#54b886",
+    "groupId": 5,
+    "note": "test event 84"
+  },
+  {
+    "type": "EVENT_85",
+    "address": "0x15500",
+    "size": 149,
+    "actualSize": 213,
+    "color": "#55b987",
+    "groupId": 6,
+    "note": "test event 85"
+  },
+  {
+    "type": "EVENT_86",
+    "address": "0x15600",
+    "size": 150,
+    "actualSize": 214,
+    "color": "#56ba88",
+    "groupId": 7,
+    "note": "test event 86"
+  },
+  {
+    "type": "EVENT_87",
+    "address": "0x15700",
+    "size": 151,
+    "actualSize": 215,
+    "color": "#57bb89",
+    "groupId": 8,
+    "note": "test event 87"
+  },
+  {
+    "type": "EVENT_88",
+    "address": "0x15800",
+    "size": 152,
+    "actualSize": 216,
+    "color": "#58bc8a",
+    "groupId": 9,
+    "note": "test event 88"
+  },
+  {
+    "type": "EVENT_89",
+    "address": "0x15900",
+    "size": 153,
+    "actualSize": 217,
+    "color": "#59bd8b",
+    "groupId": 10,
+    "note": "test event 89"
+  },
+  {
+    "type": "EVENT_90",
+    "address": "0x15a00",
+    "size": 154,
+    "actualSize": 218,
+    "color": "#5abe8c",
+    "groupId": 11,
+    "note": "test event 90"
+  },
+  {
+    "type": "EVENT_91",
+    "address": "0x15b00",
+    "size": 155,
+    "actualSize": 219,
+    "color": "#5bbf8d",
+    "groupId": 12,
+    "note": "test event 91"
+  },
+  {
+    "type": "EVENT_92",
+    "address": "0x15c00",
+    "size": 156,
+    "actualSize": 220,
+    "color": "#5cc08e",
+    "groupId": 13,
+    "note": "test event 92"
+  },
+  {
+    "type": "EVENT_93",
+    "address": "0x15d00",
+    "size": 157,
+    "actualSize": 221,
+    "color": "#5dc18f",
+    "groupId": 14,
+    "note": "test event 93"
+  },
+  {
+    "type": "EVENT_94",
+    "address": "0x15e00",
+    "size": 158,
+    "actualSize": 222,
+    "color": "#5ec290",
+    "groupId": 15,
+    "note": "test event 94"
+  },
+  {
+    "type": "EVENT_95",
+    "address": "0x15f00",
+    "size": 159,
+    "actualSize": 223,
+    "color": "#5fc391",
+    "groupId": 16,
+    "note": "test event 95"
+  },
+  {
+    "type": "EVENT_96",
+    "address": "0x16000",
+    "size": 160,
+    "actualSize": 224,
+    "color": "#60c492",
+    "groupId": 17,
+    "note": "test event 96"
+  },
+  {
+    "type": "EVENT_97",
+    "address": "0x16100",
+    "size": 161,
+    "actualSize": 225,
+    "color": "#61c593",
+    "groupId": 18,
+    "note": "test event 97"
+  },
+  {
+    "type": "EVENT_98",
+    "address": "0x16200",
+    "size": 162,
+    "actualSize": 226,
+    "color": "#62c694",
+    "groupId": 19,
+    "note": "test event 98"
+  },
+  {
+    "type": "EVENT_99",
+    "address": "0x16300",
+    "size": 163,
+    "actualSize": 227,
+    "color": "#63c795",
+    "groupId": 20,
+    "note": "test event 99"
+  },
+  {
+    "type": "EVENT_100",
+    "address": "0x16400",
+    "size": 164,
+    "actualSize": 228,
+    "color": "#64c896",
+    "groupId": 1,
+    "note": "test event 100"
+  },
+  {
+    "type": "EVENT_101",
+    "address": "0x16500",
+    "size": 165,
+    "actualSize": 229,
+    "color": "#65c997",
+    "groupId": 2,
+    "note": "test event 101"
+  },
+  {
+    "type": "EVENT_102",
+    "address": "0x16600",
+    "size": 166,
+    "actualSize": 230,
+    "color": "#66ca98",
+    "groupId": 3,
+    "note": "test event 102"
+  },
+  {
+    "type": "EVENT_103",
+    "address": "0x16700",
+    "size": 167,
+    "actualSize": 231,
+    "color": "#67cb99",
+    "groupId": 4,
+    "note": "test event 103"
+  },
+  {
+    "type": "EVENT_104",
+    "address": "0x16800",
+    "size": 168,
+    "actualSize": 232,
+    "color": "#68cc9a",
+    "groupId": 5,
+    "note": "test event 104"
+  },
+  {
+    "type": "EVENT_105",
+    "address": "0x16900",
+    "size": 169,
+    "actualSize": 233,
+    "color": "#69cd9b",
+    "groupId": 6,
+    "note": "test event 105"
+  },
+  {
+    "type": "EVENT_106",
+    "address": "0x16a00",
+    "size": 170,
+    "actualSize": 234,
+    "color": "#6ace9c",
+    "groupId": 7,
+    "note": "test event 106"
+  },
+  {
+    "type": "EVENT_107",
+    "address": "0x16b00",
+    "size": 171,
+    "actualSize": 235,
+    "color": "#6bcf9d",
+    "groupId": 8,
+    "note": "test event 107"
+  },
+  {
+    "type": "EVENT_108",
+    "address": "0x16c00",
+    "size": 172,
+    "actualSize": 236,
+    "color": "#6cd09e",
+    "groupId": 9,
+    "note": "test event 108"
+  },
+  {
+    "type": "EVENT_109",
+    "address": "0x16d00",
+    "size": 173,
+    "actualSize": 237,
+    "color": "#6dd19f",
+    "groupId": 10,
+    "note": "test event 109"
+  },
+  {
+    "type": "EVENT_110",
+    "address": "0x16e00",
+    "size": 174,
+    "actualSize": 238,
+    "color": "#6ed2a0",
+    "groupId": 11,
+    "note": "test event 110"
+  },
+  {
+    "type": "EVENT_111",
+    "address": "0x16f00",
+    "size": 175,
+    "actualSize": 239,
+    "color": "#6fd3a1",
+    "groupId": 12,
+    "note": "test event 111"
+  },
+  {
+    "type": "EVENT_112",
+    "address": "0x17000",
+    "size": 176,
+    "actualSize": 240,
+    "color": "#70d4a2",
+    "groupId": 13,
+    "note": "test event 112"
+  },
+  {
+    "type": "EVENT_113",
+    "address": "0x17100",
+    "size": 177,
+    "actualSize": 241,
+    "color": "#71d5a3",
+    "groupId": 14,
+    "note": "test event 113"
+  },
+  {
+    "type": "EVENT_114",
+    "address": "0x17200",
+    "size": 178,
+    "actualSize": 242,
+    "color": "#72d6a4",
+    "groupId": 15,
+    "note": "test event 114"
+  },
+  {
+    "type": "EVENT_115",
+    "address": "0x17300",
+    "size": 179,
+    "actualSize": 243,
+    "color": "#73d7a5",
+    "groupId": 16,
+    "note": "test event 115"
+  },
+  {
+    "type": "EVENT_116",
+    "address": "0x17400",
+    "size": 180,
+    "actualSize": 244,
+    "color": "#74d8a6",
+    "groupId": 17,
+    "note": "test event 116"
+  },
+  {
+    "type": "EVENT_117",
+    "address": "0x17500",
+    "size": 181,
+    "actualSize": 245,
+    "color": "#75d9a7",
+    "groupId": 18,
+    "note": "test event 117"
+  },
+  {
+    "type": "EVENT_118",
+    "address": "0x17600",
+    "size": 182,
+    "actualSize": 246,
+    "color": "#76daa8",
+    "groupId": 19,
+    "note": "test event 118"
+  },
+  {
+    "type": "EVENT_119",
+    "address": "0x17700",
+    "size": 183,
+    "actualSize": 247,
+    "color": "#77dba9",
+    "groupId": 20,
+    "note": "test event 119"
+  },
+  {
+    "type": "EVENT_120",
+    "address": "0x17800",
+    "size": 184,
+    "actualSize": 248,
+    "color": "#78dcaa",
+    "groupId": 1,
+    "note": "test event 120"
+  },
+  {
+    "type": "EVENT_121",
+    "address": "0x17900",
+    "size": 185,
+    "actualSize": 249,
+    "color": "#79ddab",
+    "groupId": 2,
+    "note": "test event 121"
+  },
+  {
+    "type": "EVENT_122",
+    "address": "0x17a00",
+    "size": 186,
+    "actualSize": 250,
+    "color": "#7adeac",
+    "groupId": 3,
+    "note": "test event 122"
+  },
+  {
+    "type": "EVENT_123",
+    "address": "0x17b00",
+    "size": 187,
+    "actualSize": 251,
+    "color": "#7bdfad",
+    "groupId": 4,
+    "note": "test event 123"
+  },
+  {
+    "type": "EVENT_124",
+    "address": "0x17c00",
+    "size": 188,
+    "actualSize": 252,
+    "color": "#7ce0ae",
+    "groupId": 5,
+    "note": "test event 124"
+  },
+  {
+    "type": "EVENT_125",
+    "address": "0x17d00",
+    "size": 189,
+    "actualSize": 253,
+    "color": "#7de1af",
+    "groupId": 6,
+    "note": "test event 125"
+  },
+  {
+    "type": "EVENT_126",
+    "address": "0x17e00",
+    "size": 190,
+    "actualSize": 254,
+    "color": "#7ee2b0",
+    "groupId": 7,
+    "note": "test event 126"
+  },
+  {
+    "type": "EVENT_127",
+    "address": "0x17f00",
+    "size": 191,
+    "actualSize": 255,
+    "color": "#7fe3b1",
+    "groupId": 8,
+    "note": "test event 127"
+  },
+  {
+    "type": "EVENT_128",
+    "address": "0x18000",
+    "size": 192,
+    "actualSize": 256,
+    "color": "#80e4b2",
+    "groupId": 9,
+    "note": "test event 128"
+  },
+  {
+    "type": "EVENT_129",
+    "address": "0x18100",
+    "size": 193,
+    "actualSize": 257,
+    "color": "#81e5b3",
+    "groupId": 10,
+    "note": "test event 129"
+  },
+  {
+    "type": "EVENT_130",
+    "address": "0x18200",
+    "size": 194,
+    "actualSize": 258,
+    "color": "#82e6b4",
+    "groupId": 11,
+    "note": "test event 130"
+  },
+  {
+    "type": "EVENT_131",
+    "address": "0x18300",
+    "size": 195,
+    "actualSize": 259,
+    "color": "#83e7b5",
+    "groupId": 12,
+    "note": "test event 131"
+  },
+  {
+    "type": "EVENT_132",
+    "address": "0x18400",
+    "size": 196,
+    "actualSize": 260,
+    "color": "#84e8b6",
+    "groupId": 13,
+    "note": "test event 132"
+  },
+  {
+    "type": "EVENT_133",
+    "address": "0x18500",
+    "size": 197,
+    "actualSize": 261,
+    "color": "#85e9b7",
+    "groupId": 14,
+    "note": "test event 133"
+  },
+  {
+    "type": "EVENT_134",
+    "address": "0x18600",
+    "size": 198,
+    "actualSize": 262,
+    "color": "#86eab8",
+    "groupId": 15,
+    "note": "test event 134"
+  },
+  {
+    "type": "EVENT_135",
+    "address": "0x18700",
+    "size": 199,
+    "actualSize": 263,
+    "color": "#87ebb9",
+    "groupId": 16,
+    "note": "test event 135"
+  },
+  {
+    "type": "EVENT_136",
+    "address": "0x18800",
+    "size": 200,
+    "actualSize": 264,
+    "color": "#88ecba",
+    "groupId": 17,
+    "note": "test event 136"
+  },
+  {
+    "type": "EVENT_137",
+    "address": "0x18900",
+    "size": 201,
+    "actualSize": 265,
+    "color": "#89edbb",
+    "groupId": 18,
+    "note": "test event 137"
+  },
+  {
+    "type": "EVENT_138",
+    "address": "0x18a00",
+    "size": 202,
+    "actualSize": 266,
+    "color": "#8aeebc",
+    "groupId": 19,
+    "note": "test event 138"
+  },
+  {
+    "type": "EVENT_139",
+    "address": "0x18b00",
+    "size": 203,
+    "actualSize": 267,
+    "color": "#8befbd",
+    "groupId": 20,
+    "note": "test event 139"
+  },
+  {
+    "type": "EVENT_140",
+    "address": "0x18c00",
+    "size": 204,
+    "actualSize": 268,
+    "color": "#8cf0be",
+    "groupId": 1,
+    "note": "test event 140"
+  },
+  {
+    "type": "EVENT_141",
+    "address": "0x18d00",
+    "size": 205,
+    "actualSize": 269,
+    "color": "#8df1bf",
+    "groupId": 2,
+    "note": "test event 141"
+  },
+  {
+    "type": "EVENT_142",
+    "address": "0x18e00",
+    "size": 206,
+    "actualSize": 270,
+    "color": "#8ef2c0",
+    "groupId": 3,
+    "note": "test event 142"
+  },
+  {
+    "type": "EVENT_143",
+    "address": "0x18f00",
+    "size": 207,
+    "actualSize": 271,
+    "color": "#8ff3c1",
+    "groupId": 4,
+    "note": "test event 143"
+  },
+  {
+    "type": "EVENT_144",
+    "address": "0x19000",
+    "size": 208,
+    "actualSize": 272,
+    "color": "#90f4c2",
+    "groupId": 5,
+    "note": "test event 144"
+  },
+  {
+    "type": "EVENT_145",
+    "address": "0x19100",
+    "size": 209,
+    "actualSize": 273,
+    "color": "#91f5c3",
+    "groupId": 6,
+    "note": "test event 145"
+  },
+  {
+    "type": "EVENT_146",
+    "address": "0x19200",
+    "size": 210,
+    "actualSize": 274,
+    "color": "#92f6c4",
+    "groupId": 7,
+    "note": "test event 146"
+  },
+  {
+    "type": "EVENT_147",
+    "address": "0x19300",
+    "size": 211,
+    "actualSize": 275,
+    "color": "#93f7c5",
+    "groupId": 8,
+    "note": "test event 147"
+  },
+  {
+    "type": "EVENT_148",
+    "address": "0x19400",
+    "size": 212,
+    "actualSize": 276,
+    "color": "#94f8c6",
+    "groupId": 9,
+    "note": "test event 148"
+  },
+  {
+    "type": "EVENT_149",
+    "address": "0x19500",
+    "size": 213,
+    "actualSize": 277,
+    "color": "#95f9c7",
+    "groupId": 10,
+    "note": "test event 149"
+  },
+  {
+    "type": "EVENT_150",
+    "address": "0x19600",
+    "size": 214,
+    "actualSize": 278,
+    "color": "#96fac8",
+    "groupId": 11,
+    "note": "test event 150"
+  },
+  {
+    "type": "EVENT_151",
+    "address": "0x19700",
+    "size": 215,
+    "actualSize": 279,
+    "color": "#97fbc9",
+    "groupId": 12,
+    "note": "test event 151"
+  },
+  {
+    "type": "EVENT_152",
+    "address": "0x19800",
+    "size": 216,
+    "actualSize": 280,
+    "color": "#98fcca",
+    "groupId": 13,
+    "note": "test event 152"
+  },
+  {
+    "type": "EVENT_153",
+    "address": "0x19900",
+    "size": 217,
+    "actualSize": 281,
+    "color": "#99fdcb",
+    "groupId": 14,
+    "note": "test event 153"
+  },
+  {
+    "type": "EVENT_154",
+    "address": "0x19a00",
+    "size": 218,
+    "actualSize": 282,
+    "color": "#9afecc",
+    "groupId": 15,
+    "note": "test event 154"
+  },
+  {
+    "type": "EVENT_155",
+    "address": "0x19b00",
+    "size": 219,
+    "actualSize": 283,
+    "color": "#9b64cd",
+    "groupId": 16,
+    "note": "test event 155"
+  },
+  {
+    "type": "EVENT_156",
+    "address": "0x19c00",
+    "size": 220,
+    "actualSize": 284,
+    "color": "#9c65ce",
+    "groupId": 17,
+    "note": "test event 156"
+  },
+  {
+    "type": "EVENT_157",
+    "address": "0x19d00",
+    "size": 221,
+    "actualSize": 285,
+    "color": "#9d66cf",
+    "groupId": 18,
+    "note": "test event 157"
+  },
+  {
+    "type": "EVENT_158",
+    "address": "0x19e00",
+    "size": 222,
+    "actualSize": 286,
+    "color": "#9e67d0",
+    "groupId": 19,
+    "note": "test event 158"
+  },
+  {
+    "type": "EVENT_159",
+    "address": "0x19f00",
+    "size": 223,
+    "actualSize": 287,
+    "color": "#9f68d1",
+    "groupId": 20,
+    "note": "test event 159"
+  },
+  {
+    "type": "EVENT_160",
+    "address": "0x1a000",
+    "size": 224,
+    "actualSize": 288,
+    "color": "#a069d2",
+    "groupId": 1,
+    "note": "test event 160"
+  },
+  {
+    "type": "EVENT_161",
+    "address": "0x1a100",
+    "size": 225,
+    "actualSize": 289,
+    "color": "#a16ad3",
+    "groupId": 2,
+    "note": "test event 161"
+  },
+  {
+    "type": "EVENT_162",
+    "address": "0x1a200",
+    "size": 226,
+    "actualSize": 290,
+    "color": "#a26bd4",
+    "groupId": 3,
+    "note": "test event 162"
+  },
+  {
+    "type": "EVENT_163",
+    "address": "0x1a300",
+    "size": 227,
+    "actualSize": 291,
+    "color": "#a36cd5",
+    "groupId": 4,
+    "note": "test event 163"
+  },
+  {
+    "type": "EVENT_164",
+    "address": "0x1a400",
+    "size": 228,
+    "actualSize": 292,
+    "color": "#a46dd6",
+    "groupId": 5,
+    "note": "test event 164"
+  },
+  {
+    "type": "EVENT_165",
+    "address": "0x1a500",
+    "size": 229,
+    "actualSize": 293,
+    "color": "#a56ed7",
+    "groupId": 6,
+    "note": "test event 165"
+  },
+  {
+    "type": "EVENT_166",
+    "address": "0x1a600",
+    "size": 230,
+    "actualSize": 294,
+    "color": "#a66fd8",
+    "groupId": 7,
+    "note": "test event 166"
+  },
+  {
+    "type": "EVENT_167",
+    "address": "0x1a700",
+    "size": 231,
+    "actualSize": 295,
+    "color": "#a770d9",
+    "groupId": 8,
+    "note": "test event 167"
+  },
+  {
+    "type": "EVENT_168",
+    "address": "0x1a800",
+    "size": 232,
+    "actualSize": 296,
+    "color": "#a871da",
+    "groupId": 9,
+    "note": "test event 168"
+  },
+  {
+    "type": "EVENT_169",
+    "address": "0x1a900",
+    "size": 233,
+    "actualSize": 297,
+    "color": "#a972db",
+    "groupId": 10,
+    "note": "test event 169"
+  },
+  {
+    "type": "EVENT_170",
+    "address": "0x1aa00",
+    "size": 234,
+    "actualSize": 298,
+    "color": "#aa73dc",
+    "groupId": 11,
+    "note": "test event 170"
+  },
+  {
+    "type": "EVENT_171",
+    "address": "0x1ab00",
+    "size": 235,
+    "actualSize": 299,
+    "color": "#ab74dd",
+    "groupId": 12,
+    "note": "test event 171"
+  },
+  {
+    "type": "EVENT_172",
+    "address": "0x1ac00",
+    "size": 236,
+    "actualSize": 300,
+    "color": "#ac75de",
+    "groupId": 13,
+    "note": "test event 172"
+  },
+  {
+    "type": "EVENT_173",
+    "address": "0x1ad00",
+    "size": 237,
+    "actualSize": 301,
+    "color": "#ad76df",
+    "groupId": 14,
+    "note": "test event 173"
+  },
+  {
+    "type": "EVENT_174",
+    "address": "0x1ae00",
+    "size": 238,
+    "actualSize": 302,
+    "color": "#ae77e0",
+    "groupId": 15,
+    "note": "test event 174"
+  },
+  {
+    "type": "EVENT_175",
+    "address": "0x1af00",
+    "size": 239,
+    "actualSize": 303,
+    "color": "#af78e1",
+    "groupId": 16,
+    "note": "test event 175"
+  },
+  {
+    "type": "EVENT_176",
+    "address": "0x1b000",
+    "size": 240,
+    "actualSize": 304,
+    "color": "#b079e2",
+    "groupId": 17,
+    "note": "test event 176"
+  },
+  {
+    "type": "EVENT_177",
+    "address": "0x1b100",
+    "size": 241,
+    "actualSize": 305,
+    "color": "#b17ae3",
+    "groupId": 18,
+    "note": "test event 177"
+  },
+  {
+    "type": "EVENT_178",
+    "address": "0x1b200",
+    "size": 242,
+    "actualSize": 306,
+    "color": "#b27be4",
+    "groupId": 19,
+    "note": "test event 178"
+  },
+  {
+    "type": "EVENT_179",
+    "address": "0x1b300",
+    "size": 243,
+    "actualSize": 307,
+    "color": "#b37ce5",
+    "groupId": 20,
+    "note": "test event 179"
+  },
+  {
+    "type": "EVENT_180",
+    "address": "0x1b400",
+    "size": 244,
+    "actualSize": 308,
+    "color": "#b47de6",
+    "groupId": 1,
+    "note": "test event 180"
+  },
+  {
+    "type": "EVENT_181",
+    "address": "0x1b500",
+    "size": 245,
+    "actualSize": 309,
+    "color": "#b57ee7",
+    "groupId": 2,
+    "note": "test event 181"
+  },
+  {
+    "type": "EVENT_182",
+    "address": "0x1b600",
+    "size": 246,
+    "actualSize": 310,
+    "color": "#b67fe8",
+    "groupId": 3,
+    "note": "test event 182"
+  },
+  {
+    "type": "EVENT_183",
+    "address": "0x1b700",
+    "size": 247,
+    "actualSize": 311,
+    "color": "#b780e9",
+    "groupId": 4,
+    "note": "test event 183"
+  },
+  {
+    "type": "EVENT_184",
+    "address": "0x1b800",
+    "size": 248,
+    "actualSize": 312,
+    "color": "#b881ea",
+    "groupId": 5,
+    "note": "test event 184"
+  },
+  {
+    "type": "EVENT_185",
+    "address": "0x1b900",
+    "size": 249,
+    "actualSize": 313,
+    "color": "#b982eb",
+    "groupId": 6,
+    "note": "test event 185"
+  },
+  {
+    "type": "EVENT_186",
+    "address": "0x1ba00",
+    "size": 250,
+    "actualSize": 314,
+    "color": "#ba83ec",
+    "groupId": 7,
+    "note": "test event 186"
+  },
+  {
+    "type": "EVENT_187",
+    "address": "0x1bb00",
+    "size": 251,
+    "actualSize": 315,
+    "color": "#bb84ed",
+    "groupId": 8,
+    "note": "test event 187"
+  },
+  {
+    "type": "EVENT_188",
+    "address": "0x1bc00",
+    "size": 252,
+    "actualSize": 316,
+    "color": "#bc85ee",
+    "groupId": 9,
+    "note": "test event 188"
+  },
+  {
+    "type": "EVENT_189",
+    "address": "0x1bd00",
+    "size": 253,
+    "actualSize": 317,
+    "color": "#bd86ef",
+    "groupId": 10,
+    "note": "test event 189"
+  },
+  {
+    "type": "EVENT_190",
+    "address": "0x1be00",
+    "size": 254,
+    "actualSize": 318,
+    "color": "#be87f0",
+    "groupId": 11,
+    "note": "test event 190"
+  },
+  {
+    "type": "EVENT_191",
+    "address": "0x1bf00",
+    "size": 255,
+    "actualSize": 319,
+    "color": "#bf88f1",
+    "groupId": 12,
+    "note": "test event 191"
+  },
+  {
+    "type": "EVENT_192",
+    "address": "0x1c000",
+    "size": 256,
+    "actualSize": 320,
+    "color": "#c089f2",
+    "groupId": 13,
+    "note": "test event 192"
+  },
+  {
+    "type": "EVENT_193",
+    "address": "0x1c100",
+    "size": 257,
+    "actualSize": 321,
+    "color": "#c18af3",
+    "groupId": 14,
+    "note": "test event 193"
+  },
+  {
+    "type": "EVENT_194",
+    "address": "0x1c200",
+    "size": 258,
+    "actualSize": 322,
+    "color": "#c28bf4",
+    "groupId": 15,
+    "note": "test event 194"
+  },
+  {
+    "type": "EVENT_195",
+    "address": "0x1c300",
+    "size": 259,
+    "actualSize": 323,
+    "color": "#c38cf5",
+    "groupId": 16,
+    "note": "test event 195"
+  },
+  {
+    "type": "EVENT_196",
+    "address": "0x1c400",
+    "size": 260,
+    "actualSize": 324,
+    "color": "#c48df6",
+    "groupId": 17,
+    "note": "test event 196"
+  },
+  {
+    "type": "EVENT_197",
+    "address": "0x1c500",
+    "size": 261,
+    "actualSize": 325,
+    "color": "#c58ef7",
+    "groupId": 18,
+    "note": "test event 197"
+  },
+  {
+    "type": "EVENT_198",
+    "address": "0x1c600",
+    "size": 262,
+    "actualSize": 326,
+    "color": "#c68ff8",
+    "groupId": 19,
+    "note": "test event 198"
+  },
+  {
+    "type": "EVENT_199",
+    "address": "0x1c700",
+    "size": 263,
+    "actualSize": 327,
+    "color": "#c790f9",
+    "groupId": 20,
+    "note": "test event 199"
+  },
+  {
+    "type": "EVENT_200",
+    "address": "0x1c800",
+    "size": 264,
+    "actualSize": 328,
+    "color": "#c891fa",
+    "groupId": 1,
+    "note": "test event 200"
+  }
+]
