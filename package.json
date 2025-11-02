@@ -2,6 +2,7 @@
     "name": "heapsong",
     "private": true,
     "version": "2.0.0",
+    "type": "module",
     "scripts": {
         "start": "vite",
         "build": "tsc --noEmit && vite build && cp dist/index.html dist/viz.html",

@@ -1,12 +1,7 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material'
 import { useAtom, useSetAtom } from 'jotai'
 import { useCallback, useEffect, useState } from 'react'
-import {
-    appliedFiltersAtom,
-    heapAllocationsRangeAtom,
-    selectedAddressAtom,
-    highlightRowBaseAtom,
-} from '../../state/atoms'
+import { appliedFiltersAtom, heapAllocationsRangeAtom, highlightAtom } from '../../state/atoms'
 import { formatHex } from '../../utils/formatting'
 import HexInput from '../HexInput'
 import { useToast } from '../ToastContext'
@@ -16,8 +11,7 @@ export default function GotoDialog() {
     const [input, setInput] = useState<number | null>(null)
     const [appliedFilters] = useAtom(appliedFiltersAtom)
     const [heapAllocationsRange] = useAtom(heapAllocationsRangeAtom)
-    const setSelected = useSetAtom(selectedAddressAtom)
-    const setHighlight = useSetAtom(highlightRowBaseAtom)
+    const setHighlight = useSetAtom(highlightAtom)
     const { show } = useToast()
 
     useEffect(() => {
@@ -54,14 +48,10 @@ export default function GotoDialog() {
             return
         }
 
-        setSelected(input)
         setHighlight(input)
-        setTimeout(() => {
-            setHighlight(null)
-        }, 1500)
         setOpen(false)
         setInput(null)
-    }, [appliedFilters, heapAllocationsRange, input, setHighlight, setSelected, show])
+    }, [appliedFilters, heapAllocationsRange, input, setHighlight, show])
 
     return (
         <Dialog

@@ -1,7 +1,7 @@
 import { Box, Divider, TextField, Typography, Button } from '@mui/material'
 
-import { useAtom } from 'jotai'
-import { heapAllocationsAtom, selectedAddressAtom } from '../../state/atoms'
+import { useAtom, useSetAtom } from 'jotai'
+import { heapAllocationsAtom, highlightAtom, selectedAddressAtom } from '../../state/atoms'
 import { useMemo, useState } from 'react'
 import JsonTree from '../JsonTree'
 import { formatHex } from '../../utils/formatting'
@@ -11,6 +11,7 @@ import { NormalizedAllocation } from '../../types'
 export default function SearchTab() {
     const [heap] = useAtom(heapAllocationsAtom)
     const [selected, setSelected] = useAtom(selectedAddressAtom)
+    const setHighlight = useSetAtom(highlightAtom)
     const [pendignSearch, setPendingSearch] = useState<string>('')
     const [appliedSearch, setAppliedSearch] = useState<string>('')
 
@@ -83,6 +84,7 @@ export default function SearchTab() {
                                         }}
                                         onClick={() => {
                                             setSelected(a.address)
+                                            setHighlight(a.address)
                                         }}
                                     >
                                         <Typography variant="body2" noWrap>

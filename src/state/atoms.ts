@@ -52,5 +52,5 @@ export const appliedFiltersAtom = atomWithDefault<AppliedFilters>((get) => {
 
 export const selectedAddressAtom = atom<number | null>(null)
 
-export const highlightRowBaseAtom = atom<number | null>(null)
+export const highlightAtom = atom<number | null>(null)
 // #endregion
