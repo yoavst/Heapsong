@@ -41,7 +41,7 @@ function groupBy<T, K extends string | number>(list: T[], key: (t: T) => K): Rec
 export default function Sidebar() {
     const [tab, setTab] = useState(0)
     return (
-        <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+        <Box sx={{ height: 'calc(100vh - 70px)', display: 'flex', flexDirection: 'column' }}>
             <Tabs
                 value={tab}
                 onChange={(_, v) => {
@@ -102,7 +102,6 @@ function SearchTab() {
                     onChange={(e) => {
                         setFilterSrc(e.target.value)
                     }}
-                    inputProps={{ list: 'heap-fields' }}
                 />
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
                     <Button
@@ -115,16 +114,8 @@ function SearchTab() {
                         Apply
                     </Button>
                 </Box>
-                <datalist id="heap-fields">
-                    <option value="e.type" />
-                    <option value="e.address" />
-                    <option value="e.size" />
-                    <option value="e.actual_size" />
-                    <option value="e.color" />
-                    <option value="e.group_id" />
-                </datalist>
             </Box>
-            <Box sx={{ flex: 1, overflow: 'auto', pr: 1 }}>
+            <Box sx={{ flex: 16, overflow: 'auto', pr: 1 }}>
                 {Object.entries(grouped)
                     .sort((a, b) => Number(a[0]) - Number(b[0]))
                     .map(([groupId, list]) => (
@@ -166,7 +157,7 @@ function SearchTab() {
                     ))}
             </Box>
             <Divider />
-            <Box sx={{ p: 1.5, minHeight: 120, maxHeight: 240, overflow: 'auto' }}>
+            <Box sx={{ p: 1.5, flex: selected != null ? 5 : 0, minHeight: 50, overflow: 'auto' }}>
                 {selected != null ? (
                     <JsonTree data={heap?.find((x) => x.address === selected)} />
                 ) : (
