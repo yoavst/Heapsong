@@ -283,7 +283,7 @@ function Visualization() {
                                                 display: 'flex',
                                                 alignItems: 'center',
                                                 justifyContent: 'center',
-                                                color: 'black',
+                                                color: 'white',
                                                 fontSize: 12,
                                                 textShadow: '0 1px 1px rgba(255,255,255,0.6)',
                                             }}
