@@ -9,7 +9,7 @@ import {
     Typography,
 } from '@mui/material'
 import TopBar from '../components/TopBar'
-import Sidebar from '../components/Sidebar'
+import Sidebar from '../components/sidebar/Sidebar'
 import { useAtom, useSetAtom } from 'jotai'
 import {
     appliedFiltersAtom,

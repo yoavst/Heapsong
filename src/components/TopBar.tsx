@@ -1,15 +1,13 @@
-import { AppBar, Box, Button, Stack, Toolbar, Typography } from '@mui/material'
+import { AppBar, Box, Button, Stack, Toolbar, Typography, Link } from '@mui/material'
 import { useAtom } from 'jotai'
 import { appliedFiltersAtom, DEFAULT_ROW_SIZE } from '../state/atoms'
 import HexInput from './HexInput'
 import { useRef } from 'react'
 import { AppliedFilters } from '../types'
-import { useNavigate } from 'react-router-dom'
 
 export default function TopBar() {
     const [appliedFilters, setAppliedFilter] = useAtom(appliedFiltersAtom)
     const pendingFilterChanges = useRef<Partial<AppliedFilters>>({})
-    const navigate = useNavigate()
 
     const applyAll = () => {
         setAppliedFilter({ ...appliedFilters, ...pendingFilterChanges.current })
@@ -31,11 +29,10 @@ export default function TopBar() {
                     variant="h6"
                     fontWeight={800}
                     color="primary"
-                    onClick={() => {
-                        void navigate('/')
-                    }}
                 >
-                    HeapSong
+                    <Link href="./" underline="none">
+                        HeapSong
+                    </Link>
                 </Typography>
                 <Stack direction="row" spacing={2} alignItems="center" sx={{ flex: 1 }}>
                     <HexInput
