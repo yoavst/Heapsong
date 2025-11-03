@@ -102,10 +102,11 @@ export default function Visualization() {
 
     const addressFontLength = rows[rows.length - 1].base.toString(16).length
     let fontSize = 14
+    let width = 80
     if (addressFontLength > 12) {
-        fontSize = 9
+        width = 120
     } else if (addressFontLength > 8) {
-        fontSize = 11
+        width = 100
     }
 
     return (
@@ -117,11 +118,11 @@ export default function Visualization() {
                 <Box
                     key={`${row.base}-${row.collapsed ? 'c' : 'n'}`}
                     data-row-base={row.base}
-                    sx={{ display: 'flex', alignItems: 'stretch', px: 2, py: 1, gap: 1 }}
+                    sx={{ display: 'flex', alignItems: 'stretch', paddingLeft: 1, paddingRight: 2, py: 1, gap: 1 }}
                 >
                     <Box
                         sx={{
-                            width: 80,
+                            width,
                             fontSize,
                             fontFamily: 'Courier New',
                             color:
