@@ -118,7 +118,14 @@ export default function Visualization() {
                 <Box
                     key={`${row.base}-${row.collapsed ? 'c' : 'n'}`}
                     data-row-base={row.base}
-                    sx={{ display: 'flex', alignItems: 'stretch', paddingLeft: 1, paddingRight: 2, py: 1, gap: 1 }}
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'stretch',
+                        paddingLeft: 1,
+                        paddingRight: 2,
+                        py: 1,
+                        gap: 1,
+                    }}
                 >
                     <Box
                         sx={{
