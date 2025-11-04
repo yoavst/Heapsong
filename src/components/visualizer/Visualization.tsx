@@ -101,7 +101,6 @@ export default function Visualization() {
     }
 
     const addressFontLength = rows[rows.length - 1].base.toString(16).length
-    let fontSize = 14
     let width = 80
     if (addressFontLength > 12) {
         width = 120
@@ -130,7 +129,7 @@ export default function Visualization() {
                     <Box
                         sx={{
                             width,
-                            fontSize,
+                            fontSize: 14,
                             fontFamily: 'Courier New',
                             color:
                                 highlight != null &&
