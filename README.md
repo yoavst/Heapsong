@@ -1,6 +1,6 @@
 # HeapSong
 
-heap visualizer written by cursor completely (so don't even try to look at the code).
+I wrote an heap visualizer written using cursor, and then re-wrote the code to make it maintainable.
 
 ![Screenshot](public/screenshot.png)
 
@@ -12,9 +12,9 @@ json input format:
         "type": string,
         "address": hex string or int,
         "size": hex string or int,
-        "actual_size": hex string or int,
+        "actualSize": hex string or int,
         "color": color string for js,
-        "group_id": int,
+        "groupId": int,
         // Can add extra properties for search
     },
     ...
@@ -23,4 +23,7 @@ json input format:
 
 See [sample](public/sample-heap.json) for a sample.
 
-It probably use floating point to represent numbers, so you on user mode addresses only...
+## TODO
+
+[ ] Convert usage from number to BigInteger to support kernel addresses
+[ ] Improve visualization of small entries

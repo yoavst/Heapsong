@@ -1,4 +1,4 @@
-import { Box, Tooltip, Typography } from '@mui/material'
+import { Box } from '@mui/material'
 import { useAtom } from 'jotai'
 import {
     appliedFiltersAtom,
@@ -10,6 +10,7 @@ import {
 import { useEffect, useMemo, useRef } from 'react'
 import { formatHex } from '../../utils/formatting'
 import { buildRows, RowEntry } from '../../utils/rows'
+import { CollapsedRow, HeapRow } from './HeapRow'
 
 export default function Visualization() {
     const [heap] = useAtom(heapAllocationsAtom)
@@ -115,7 +116,7 @@ export default function Visualization() {
         >
             {rows.map((row) => (
                 <Box
-                    key={`${row.base}-${row.collapsed ? 'c' : 'n'}`}
+                    key={`${row.base}`}
                     data-row-base={row.base}
                     sx={{
                         display: 'flex',
@@ -131,6 +132,7 @@ export default function Visualization() {
                             width,
                             fontSize: 14,
                             fontFamily: 'Courier New',
+                            textAlign: 'center',
                             color:
                                 highlight != null &&
                                 row.base <= highlight &&
@@ -145,133 +147,15 @@ export default function Visualization() {
                     {row.collapsed ? (
                         <CollapsedRow row={row} />
                     ) : (
-                        <Box
-                            sx={{
-                                flex: 1,
-                                display: 'flex',
-                                position: 'relative',
-                                height: 28,
-                                bgcolor: 'action.hover',
-                                borderRadius: 1,
-                                overflow: 'hidden',
-                            }}
-                        >
-                            {row.gaps.map((g, idx) => (
-                                <Box
-                                    key={`gap-${idx}`}
-                                    sx={{
-                                        position: 'absolute',
-                                        left: `${g.leftPct}%`,
-                                        width: `${g.widthPct}%`,
-                                        top: 0,
-                                        bottom: 0,
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        pointerEvents: 'none',
-                                    }}
-                                >
-                                    <Typography
-                                        variant="caption"
-                                        sx={{ color: 'text.secondary', opacity: 0.8 }}
-                                    >
-                                        {g.sizeHex}
-                                    </Typography>
-                                </Box>
-                            ))}
-                            {row.allocs.map((a) => (
-                                <Tooltip
-                                    key={a.address}
-                                    title={`${a.type} #${a.groupId} (${formatHex(a.size)}) @ ${formatHex(a.address)}`}
-                                    arrow
-                                >
-                                    <Box
-                                        data-addr={a.address}
-                                        onClick={() => {
-                                            setSelected(a.address)
-                                            setHighlight(null)
-                                        }}
-                                        sx={{
-                                            position: 'absolute',
-                                            left: `${a.leftPct}%`,
-                                            width: `${a.widthPct}%`,
-                                            height: '100%',
-                                            bgcolor: a.color,
-                                            opacity: 0.5,
-                                            boxSizing: 'border-box',
-                                        }}
-                                    >
-                                        <Box
-                                            sx={{
-                                                position: 'absolute',
-                                                left: 0,
-                                                top: 0,
-                                                bottom: 0,
-                                                width: `${a.requestedPct}%`,
-                                                bgcolor: a.color,
-                                                opacity: selected === a.address ? 0.95 : 0.8,
-                                            }}
-                                        />
-                                        <Box
-                                            sx={{
-                                                position: 'relative',
-                                                zIndex: 1,
-                                                height: '100%',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                color: 'white',
-                                                fontSize: 12,
-                                                textShadow: '0 1px 1px rgba(255,255,255,0.6)',
-                                            }}
-                                        >
-                                            {a.type} #{a.groupId} ({formatHex(a.size)})
-                                        </Box>
-                                        {selected === a.address && (
-                                            <Box
-                                                sx={{
-                                                    position: 'absolute',
-                                                    inset: 0,
-                                                    border: '2px solid #fff',
-                                                    boxSizing: 'border-box',
-                                                    pointerEvents: 'none',
-                                                }}
-                                            />
-                                        )}
-                                    </Box>
-                                </Tooltip>
-                            ))}
-                        </Box>
+                        <HeapRow
+                            row={row}
+                            selected={selected}
+                            setSelected={setSelected}
+                            setHighlight={setHighlight}
+                        />
                     )}
                 </Box>
             ))}
-        </Box>
-    )
-}
-
-interface CollapsedRowParams {
-    row: RowEntry
-}
-
-function CollapsedRow({ row }: CollapsedRowParams) {
-    return (
-        <Box
-            sx={{
-                flex: 1,
-                height: 28,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                px: 1,
-                bgcolor: 'background.paper',
-                borderRadius: 1,
-                border: 1,
-                borderColor: 'divider',
-            }}
-        >
-            <Typography variant="caption" color="text.secondary">
-                {`Collapsed range ${formatHex(row.base)}-${formatHex(row.base + row.size)} (${formatHex(row.size)})`}
-            </Typography>
         </Box>
     )
 }
