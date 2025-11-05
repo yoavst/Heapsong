@@ -102,6 +102,12 @@ export function buildRows(
         }
 
         // fill across rows
+        if (endIndex - startIndex > 0x100) {
+            // TOOO: Let's just ignore it for now, better skip it
+            console.log('Error with allocation', a)
+            continue
+        }
+
         let allocRemaining = a.size
         for (let r = startIndex; r <= endIndex; r++) {
             const segBase = base + r * rowSize
