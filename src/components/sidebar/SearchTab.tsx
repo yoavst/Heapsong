@@ -85,7 +85,6 @@ export default function SearchTab() {
                                         }}
                                         onClick={() => {
                                             setSelected(a.address)
-                                            setHighlight(a.address)
                                         }}
                                     >
                                         <Typography variant="body2" noWrap>

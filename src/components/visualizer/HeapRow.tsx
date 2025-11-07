@@ -66,3 +66,53 @@ export function CollapsedRow({ row }: CollapsedRowParams) {
         </Box>
     )
 }
+
+interface RowWithAddressProps {
+    row: RowEntry
+    selected: bigint | null
+    setSelected: (addr: bigint) => void
+    width: number
+    highlight: bigint | null
+    addrWidth: number
+}
+
+export function RowWithAddress({
+    row,
+    selected,
+    setSelected,
+    width,
+    highlight,
+    addrWidth,
+}: RowWithAddressProps) {
+    return (
+        <>
+            <Box
+                sx={{
+                    width: addrWidth,
+                    fontSize: 14,
+                    fontFamily: 'Courier New',
+                    textAlign: 'center',
+                    color:
+                        highlight != null &&
+                        row.base <= highlight &&
+                        row.base + row.size > highlight
+                            ? 'warning.main'
+                            : 'text.secondary',
+                    transition: 'color 200ms',
+                }}
+            >
+                {formatHex(row.base)}
+            </Box>
+            {row.collapsed ? (
+                <CollapsedRow row={row} />
+            ) : (
+                <HeapRow
+                    row={row}
+                    selected={selected}
+                    setSelected={setSelected}
+                    width={width - addrWidth}
+                />
+            )}
+        </>
+    )
+}

@@ -8,9 +8,8 @@ import {
     highlightAtom,
 } from '../../state/atoms'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { formatHex } from '../../utils/formatting'
 import { buildRows, RowEntry } from '../../utils/rows'
-import { CollapsedRow, HeapRow } from './HeapRow'
+import { RowWithAddress } from './HeapRow'
 
 export default function Visualization() {
     const [heap] = useAtom(heapAllocationsAtom)
@@ -146,33 +145,14 @@ export default function Visualization() {
                         gap: 1,
                     }}
                 >
-                    <Box
-                        sx={{
-                            addrWidth,
-                            fontSize: 14,
-                            fontFamily: 'Courier New',
-                            textAlign: 'center',
-                            color:
-                                highlight != null &&
-                                row.base <= highlight &&
-                                row.base + row.size > highlight
-                                    ? 'warning.main'
-                                    : 'text.secondary',
-                            transition: 'color 200ms',
-                        }}
-                    >
-                        {formatHex(row.base)}
-                    </Box>
-                    {row.collapsed ? (
-                        <CollapsedRow row={row} />
-                    ) : (
-                        <HeapRow
-                            row={row}
-                            selected={selected}
-                            setSelected={setSelected}
-                            width={containerWidth - addrWidth}
-                        />
-                    )}
+                    <RowWithAddress
+                        row={row}
+                        selected={selected}
+                        setSelected={setSelected}
+                        width={containerWidth}
+                        highlight={highlight}
+                        addrWidth={addrWidth}
+                    />
                 </Box>
             ))}
         </Box>
