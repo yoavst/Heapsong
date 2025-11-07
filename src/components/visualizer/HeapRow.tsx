@@ -3,6 +3,7 @@ import { RowEntry } from '../../utils/rows'
 import { formatHex } from '../../utils/formatting'
 import AllocationBox from './AllocationBox'
 import GapBox from './GapBox'
+import { memo } from 'react'
 
 export const HeapRowHeight = 28
 
@@ -77,7 +78,7 @@ interface RowWithAddressProps {
     addrWidth: number
 }
 
-export function RowWithAddress({
+export const RowWithAddress = memo(function RowWithAddress({
     row,
     selected,
     setSelected,
@@ -117,4 +118,4 @@ export function RowWithAddress({
             )}
         </>
     )
-}
+})

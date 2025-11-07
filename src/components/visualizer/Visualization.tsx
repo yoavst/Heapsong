@@ -32,6 +32,10 @@ function Row({
     addrWidth,
 }: RowComponentProps<RowProps>) {
     const row = rows[index]
+    const selectedInRow = selected != null && row.base <= selected && selected < row.base + row.size
+    const highlightInRow =
+        highlight != null && row.base <= highlight && highlight < row.base + row.size
+
     return (
         <Box
             style={style}
@@ -47,10 +51,10 @@ function Row({
         >
             <RowWithAddress
                 row={row}
-                selected={selected}
+                selected={selectedInRow ? selected : null}
                 setSelected={setSelected}
                 width={containerWidth}
-                highlight={highlight}
+                highlight={highlightInRow ? highlight : null}
                 addrWidth={addrWidth}
             />
         </Box>
