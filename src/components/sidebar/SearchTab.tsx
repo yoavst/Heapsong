@@ -2,12 +2,13 @@ import { Box, Divider, TextField, Typography, Button } from '@mui/material'
 
 import { useAtom, useSetAtom } from 'jotai'
 import { heapAllocationsAtom, highlightAtom, selectedAddressAtom } from '../../state/atoms'
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useRef, useEffect } from 'react'
 import JsonTree from '../JsonTree'
-import { formatHex } from '../../utils/formatting'
 import { groupBy } from '../../utils/collections'
 import { NormalizedAllocation } from '../../types'
 import { compare } from '../../utils/bigint'
+import { List } from 'react-window'
+import { SearchTabRow, type ListItem } from './SearchTabRow'
 
 export default function SearchTab() {
     const [heap] = useAtom(heapAllocationsAtom)
@@ -19,6 +20,42 @@ export default function SearchTab() {
     const filterFn = useMemo(() => createFilter(appliedSearch), [appliedSearch])
     const filtered = useMemo(() => (heap ? heap.filter(filterFn) : []), [heap, filterFn])
     const grouped = useMemo(() => groupBy(filtered, (e) => e.groupId), [filtered])
+
+    const listItems = useMemo(() => {
+        const items: ListItem[] = []
+        const sortedGroups = Object.entries(grouped).sort((a, b) => Number(a[0]) - Number(b[0]))
+
+        for (const [groupId, list] of sortedGroups) {
+            items.push({ type: 'group', groupId })
+            const sortedList = [...list].sort((a, b) => compare(a.address, b.address))
+            for (const allocation of sortedList) {
+                items.push({ type: 'item', allocation })
+            }
+        }
+
+        return items
+    }, [grouped])
+
+    const containerRef = useRef<HTMLDivElement | null>(null)
+    const [containerHeight, setContainerHeight] = useState(0)
+
+    useEffect(() => {
+        const updateHeight = () => {
+            if (containerRef.current) {
+                setContainerHeight(containerRef.current.offsetHeight)
+            }
+        }
+
+        updateHeight()
+        const resizeObserver = new ResizeObserver(updateHeight)
+        if (containerRef.current) {
+            resizeObserver.observe(containerRef.current)
+        }
+
+        return () => {
+            resizeObserver.disconnect()
+        }
+    }, [])
 
     return (
         <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 2, height: '100%' }}>
@@ -55,49 +92,30 @@ export default function SearchTab() {
                     </Button>
                 </Box>
             </Box>
-            <Box sx={{ flex: 16, overflow: 'auto', pr: 1 }}>
-                {Object.entries(grouped)
-                    .sort((a, b) => Number(a[0]) - Number(b[0]))
-                    .map(([groupId, list]) => (
-                        <Box key={groupId} sx={{ mb: 1.5 }}>
-                            <Typography
-                                variant="subtitle2"
-                                sx={{ px: 1, py: 0.5, color: 'text.secondary' }}
-                            >
-                                Group {groupId}
-                            </Typography>
-                            {list
-                                .sort((a, b) => compare(a.address, b.address))
-                                .map((a) => (
-                                    <Box
-                                        key={a.address.toString()}
-                                        sx={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            px: 1,
-                                            py: 0.5,
-                                            borderLeft: `4px solid ${a.color}`,
-                                            cursor: 'pointer',
-                                            bgcolor:
-                                                selected === a.address
-                                                    ? 'action.selected'
-                                                    : undefined,
-                                        }}
-                                        onClick={() => {
-                                            setSelected(a.address)
-                                            setHighlight(a.address)
-                                        }}
-                                    >
-                                        <Typography variant="body2" noWrap>
-                                            {a.type} ({formatHex(a.size)}) → {formatHex(a.address)}
-                                        </Typography>
-                                    </Box>
-                                ))}
-                        </Box>
-                    ))}
+            <Box ref={containerRef} sx={{ flex: 16, minHeight: 0, height: 0 }}>
+                {listItems.length > 0 ? (
+                    <List
+                        rowComponent={SearchTabRow}
+                        rowCount={listItems.length}
+                        rowHeight={32}
+                        rowProps={{
+                            items: listItems,
+                            selected,
+                            setSelected,
+                            setHighlight,
+                        }}
+                        style={{
+                            height: containerHeight || 400,
+                        }}
+                    />
+                ) : (
+                    <Box sx={{ p: 2, textAlign: 'center', color: 'text.secondary' }}>
+                        <Typography variant="body2">No results</Typography>
+                    </Box>
+                )}
             </Box>
             <Divider />
-            <Box sx={{ p: 1.5, flex: selected != null ? 5 : 0, minHeight: 50, overflow: 'auto' }}>
+            <Box sx={{ p: 1.5, flex: selected != null ? 5.5 : 0, minHeight: 50, overflow: 'auto' }}>
                 {selected != null ? (
                     <JsonTree data={heap?.find((x) => x.address === selected)} />
                 ) : (
