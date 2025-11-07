@@ -134,10 +134,13 @@ const createFilter = (expression: string): ((e: NormalizedAllocation) => boolean
     }
     try {
         // eslint-disable-next-line @typescript-eslint/no-implied-eval
-        const fn = new Function('e', `return (${expression})`)
+        const fn: (e: NormalizedAllocation) => unknown = new Function(
+            'e',
+            `return (${expression})`
+        ) as (e: NormalizedAllocation) => unknown
         return (e) => {
             try {
-                return Boolean(fn(e))
+                return !!fn(e)
             } catch {
                 return false
             }

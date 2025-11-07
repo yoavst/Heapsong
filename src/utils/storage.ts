@@ -4,7 +4,7 @@ import { type SyncStorage } from 'jotai/vanilla/utils/atomWithStorage'
 const BIGINT_PREFIX = 'bigint:'
 
 const createBigIntStorage = () => {
-    const convertBigIntToHex = (obj: any): any => {
+    const convertBigIntToHex = (obj: unknown): unknown => {
         if (obj === null || obj === undefined) return obj
         if (typeof obj === 'bigint') {
             return BIGINT_PREFIX + obj.toString(16)
@@ -13,7 +13,7 @@ const createBigIntStorage = () => {
             return obj.map(convertBigIntToHex)
         }
         if (typeof obj === 'object') {
-            const result: any = {}
+            const result: Record<string, unknown> = {}
             for (const [key, value] of Object.entries(obj)) {
                 result[key] = convertBigIntToHex(value)
             }
@@ -22,7 +22,7 @@ const createBigIntStorage = () => {
         return obj
     }
 
-    const convertHexToBigInt = (obj: any): any => {
+    const convertHexToBigInt = (obj: unknown): unknown => {
         if (obj === null || obj === undefined) return obj
         if (typeof obj === 'string' && obj.startsWith(BIGINT_PREFIX)) {
             try {
@@ -36,7 +36,7 @@ const createBigIntStorage = () => {
             return obj.map(convertHexToBigInt)
         }
         if (typeof obj === 'object') {
-            const result: any = {}
+            const result: Record<string, unknown> = {}
             for (const [key, value] of Object.entries(obj)) {
                 result[key] = convertHexToBigInt(value)
             }
@@ -46,17 +46,17 @@ const createBigIntStorage = () => {
     }
 
     return {
-        getItem: (key: string, initialValue: any) => {
+        getItem: (key: string, initialValue: unknown) => {
             try {
                 const item = localStorage.getItem(key)
                 if (item === null) return initialValue
-                const parsed = JSON.parse(item)
+                const parsed: unknown = JSON.parse(item)
                 return convertHexToBigInt(parsed)
             } catch {
                 return initialValue
             }
         },
-        setItem: (key: string, value: any) => {
+        setItem: (key: string, value: unknown) => {
             try {
                 const converted = convertBigIntToHex(value)
                 const serialized = JSON.stringify(converted)
@@ -73,11 +73,7 @@ const createBigIntStorage = () => {
 
 const bigIntStorage = createBigIntStorage()
 
-export const atomWithStorageOnInit = <T>(
-    key: string,
-    defaultValue: T,
-    hasBigInt: boolean = false
-) => {
+export const atomWithStorageOnInit = <T>(key: string, defaultValue: T, hasBigInt = false) => {
     return atomWithStorage(
         key,
         defaultValue,

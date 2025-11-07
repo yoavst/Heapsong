@@ -1,3 +1,5 @@
+/// <reference types="user-agent-data-types" />
+
 import {
     AppBar,
     Box,
@@ -36,7 +38,7 @@ export default function TopBar() {
     }, [heap])
 
     useEffect(() => {
-        const isMac = navigator.platform.toUpperCase().includes('MAC')
+        const isMac = navigator.userAgentData?.platform.toUpperCase().includes('MAC') ?? false
         const onKey = (e: KeyboardEvent) => {
             if (e.key.toLowerCase() === 's' && ((!isMac && e.ctrlKey) || (isMac && e.metaKey))) {
                 e.preventDefault()

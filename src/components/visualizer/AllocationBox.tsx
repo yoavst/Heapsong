@@ -26,8 +26,12 @@ export default function AllocationBox({ alloc, selected, setSelected, width }: A
             onClick={() => {
                 setSelected(alloc.address)
             }}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
+            onMouseEnter={() => {
+                setIsHovered(true)
+            }}
+            onMouseLeave={() => {
+                setIsHovered(false)
+            }}
             sx={{
                 position: 'absolute',
                 left: `${alloc.leftPct}%`,

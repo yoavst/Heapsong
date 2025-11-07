@@ -128,7 +128,7 @@ export default function Visualization() {
         if (rowIndex !== -1) {
             listRef.current.scrollToRow({ index: rowIndex, align: 'center', behavior: 'smooth' })
         }
-    }, [highlight, rows, setHighlight])
+    }, [highlight, listRef, rows, setHighlight])
 
     useEffect(() => {
         if (highlight == null) return
