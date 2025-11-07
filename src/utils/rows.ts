@@ -121,7 +121,8 @@ export function buildRows(
             const leftPct = (Number(segStart - segBase) / rowSizeNumber) * 100
             const widthPct = (segLenNumber / rowSizeNumber) * 100
             const requestedInSeg = min(allocRemaining, segLen)
-            const requestedPct = (Number(requestedInSeg) / rowSizeNumber) * 100
+            const requestedPct =
+                segLenNumber > 0 ? (Number(requestedInSeg) / segLenNumber) * 100 : 0
             allocRemaining -= requestedInSeg
 
             // ensure we have a row for segBase
