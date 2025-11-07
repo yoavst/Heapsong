@@ -7,7 +7,7 @@ import {
     collapseEmptyRowsAtom,
     highlightAtom,
 } from '../../state/atoms'
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { formatHex } from '../../utils/formatting'
 import { buildRows, RowEntry } from '../../utils/rows'
 import { CollapsedRow, HeapRow } from './HeapRow'
@@ -19,6 +19,25 @@ export default function Visualization() {
     const [collapse] = useAtom(collapseEmptyRowsAtom)
     const [highlight, setHighlight] = useAtom(highlightAtom)
     const containerRef = useRef<HTMLDivElement | null>(null)
+    const [containerWidth, setContainerWidth] = useState(0)
+
+    useEffect(() => {
+        const updateWidth = () => {
+            if (containerRef.current) {
+                setContainerWidth(containerRef.current.offsetWidth)
+            }
+        }
+
+        updateWidth()
+        const resizeObserver = new ResizeObserver(updateWidth)
+        if (containerRef.current) {
+            resizeObserver.observe(containerRef.current)
+        }
+
+        return () => {
+            resizeObserver.disconnect()
+        }
+    }, [])
 
     const filtered = useMemo(() => {
         if (!heap) return []
@@ -102,11 +121,11 @@ export default function Visualization() {
     }
 
     const addressFontLength = rows[rows.length - 1].base.toString(16).length
-    let width = 80
+    let addrWidth = 80
     if (addressFontLength > 12) {
-        width = 120
+        addrWidth = 120
     } else if (addressFontLength > 8) {
-        width = 100
+        addrWidth = 100
     }
 
     return (
@@ -129,7 +148,7 @@ export default function Visualization() {
                 >
                     <Box
                         sx={{
-                            width,
+                            addrWidth,
                             fontSize: 14,
                             fontFamily: 'Courier New',
                             textAlign: 'center',
@@ -151,7 +170,7 @@ export default function Visualization() {
                             row={row}
                             selected={selected}
                             setSelected={setSelected}
-                            setHighlight={setHighlight}
+                            width={containerWidth - addrWidth}
                         />
                     )}
                 </Box>

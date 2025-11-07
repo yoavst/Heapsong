@@ -1,15 +1,17 @@
-import { Box, Tooltip, Typography } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import { RowEntry } from '../../utils/rows'
 import { formatHex } from '../../utils/formatting'
+import AllocationBox from './AllocationBox'
+import GapBox from './GapBox'
 
 interface HeapRowProps {
     row: RowEntry
     selected: bigint | null
     setSelected: (addr: bigint) => void
-    setHighlight: (addr: bigint | null) => void
+    width: number
 }
 
-export function HeapRow({ row, selected, setSelected, setHighlight }: HeapRowProps) {
+export function HeapRow({ row, selected, setSelected, width }: HeapRowProps) {
     return (
         <Box
             sx={{
@@ -23,85 +25,16 @@ export function HeapRow({ row, selected, setSelected, setHighlight }: HeapRowPro
             }}
         >
             {row.gaps.map((g, idx) => (
-                <Box
-                    key={`gap-${idx}`}
-                    sx={{
-                        position: 'absolute',
-                        left: `${g.leftPct}%`,
-                        width: `${g.widthPct}%`,
-                        top: 0,
-                        bottom: 0,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        pointerEvents: 'none',
-                    }}
-                >
-                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                        {g.sizeHex}
-                    </Typography>
-                </Box>
+                <GapBox key={`gap-${idx}`} gap={g} width={(width * g.widthPct) / 100} />
             ))}
             {row.allocs.map((a) => (
-                <Tooltip
+                <AllocationBox
                     key={a.address.toString()}
-                    title={`${a.type} #${a.groupId} (${formatHex(a.size)}) @ ${formatHex(a.address)}`}
-                    arrow
-                >
-                    <Box
-                        data-addr={a.address.toString()}
-                        onClick={() => {
-                            setSelected(a.address)
-                            setHighlight(null)
-                        }}
-                        sx={{
-                            position: 'absolute',
-                            left: `${a.leftPct}%`,
-                            width: `${a.widthPct}%`,
-                            height: '100%',
-                            bgcolor: a.color,
-                            opacity: 0.7,
-                            boxSizing: 'border-box',
-                        }}
-                    >
-                        <Box
-                            sx={{
-                                position: 'absolute',
-                                left: 0,
-                                top: 0,
-                                bottom: 0,
-                                width: `${a.requestedPct}%`,
-                                bgcolor: a.color,
-                            }}
-                        />
-                        <Box
-                            sx={{
-                                position: 'relative',
-                                zIndex: 1,
-                                height: '100%',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                color: 'white',
-                                fontSize: 12,
-                                fontWeight: 'bold',
-                            }}
-                        >
-                            {a.type} #{a.groupId} ({formatHex(a.size)})
-                        </Box>
-                        {selected === a.address && (
-                            <Box
-                                sx={{
-                                    position: 'absolute',
-                                    inset: 0,
-                                    border: '2px solid #fff',
-                                    boxSizing: 'border-box',
-                                    pointerEvents: 'none',
-                                }}
-                            />
-                        )}
-                    </Box>
-                </Tooltip>
+                    alloc={a}
+                    selected={selected === a.address}
+                    setSelected={setSelected}
+                    width={(width * a.widthPct) / 100}
+                />
             ))}
         </Box>
     )

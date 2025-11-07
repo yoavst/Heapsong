@@ -11,8 +11,8 @@ export const themeColorAtom = atomWithStorageOnInit<string>('themeColor', '#7c4d
 export const collapseEmptyRowsAtom = atomWithStorageOnInit<{ enabled: boolean; threshold: number }>(
     'collapseEmptyRows',
     {
-        enabled: false,
-        threshold: 1,
+        enabled: true,
+        threshold: 3,
     }
 )
 export const defaultFiltersAtom = atomWithStorageOnInit<AppliedFilters>(

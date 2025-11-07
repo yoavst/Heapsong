@@ -10,9 +10,9 @@ json input format:
 [
     {
         "type": string,
-        "address": hex string or int,
-        "size": hex string or int,
-        "actualSize": hex string or int,
+        "address": hex string,
+        "size": hex string,
+        "actualSize": hex string,
         "color": color string for js,
         "groupId": int,
         // Can add extra properties for search
@@ -22,8 +22,3 @@ json input format:
 ```
 
 See [sample](public/sample-heap.json) for a sample.
-
-## TODO
-
-[ ] Convert usage from number to BigInteger to support kernel addresses
-[ ] Improve visualization of small entries
