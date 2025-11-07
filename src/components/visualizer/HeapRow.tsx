@@ -4,6 +4,8 @@ import { formatHex } from '../../utils/formatting'
 import AllocationBox from './AllocationBox'
 import GapBox from './GapBox'
 
+export const HeapRowHeight = 28
+
 interface HeapRowProps {
     row: RowEntry
     selected: bigint | null
@@ -18,7 +20,6 @@ export function HeapRow({ row, selected, setSelected, width }: HeapRowProps) {
                 flex: 1,
                 display: 'flex',
                 position: 'relative',
-                height: 28,
                 bgcolor: 'action.hover',
                 borderRadius: 1,
                 overflow: 'hidden',
@@ -88,6 +89,7 @@ export function RowWithAddress({
         <>
             <Box
                 sx={{
+                    height: HeapRowHeight,
                     width: addrWidth,
                     fontSize: 14,
                     fontFamily: 'Courier New',

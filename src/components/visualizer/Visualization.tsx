@@ -9,7 +9,53 @@ import {
 } from '../../state/atoms'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { buildRows, RowEntry } from '../../utils/rows'
-import { RowWithAddress } from './HeapRow'
+import { RowWithAddress, HeapRowHeight } from './HeapRow'
+import { List, RowComponentProps, useListRef } from 'react-window'
+
+interface RowProps {
+    rows: RowEntry[]
+    selected: bigint | null
+    setSelected: (addr: bigint) => void
+    containerWidth: number
+    highlight: bigint | null
+    addrWidth: number
+}
+
+function Row({
+    index,
+    style,
+    rows,
+    selected,
+    setSelected,
+    containerWidth,
+    highlight,
+    addrWidth,
+}: RowComponentProps<RowProps>) {
+    const row = rows[index]
+    return (
+        <Box
+            style={style}
+            data-row-base={row.base.toString()}
+            sx={{
+                display: 'flex',
+                alignItems: 'stretch',
+                paddingLeft: 1,
+                paddingRight: 2,
+                py: 1,
+                gap: 1,
+            }}
+        >
+            <RowWithAddress
+                row={row}
+                selected={selected}
+                setSelected={setSelected}
+                width={containerWidth}
+                highlight={highlight}
+                addrWidth={addrWidth}
+            />
+        </Box>
+    )
+}
 
 export default function Visualization() {
     const [heap] = useAtom(heapAllocationsAtom)
@@ -18,17 +64,20 @@ export default function Visualization() {
     const [collapse] = useAtom(collapseEmptyRowsAtom)
     const [highlight, setHighlight] = useAtom(highlightAtom)
     const containerRef = useRef<HTMLDivElement | null>(null)
+    const listRef = useListRef(null)
     const [containerWidth, setContainerWidth] = useState(0)
+    const [containerHeight, setContainerHeight] = useState(0)
 
     useEffect(() => {
-        const updateWidth = () => {
+        const updateSize = () => {
             if (containerRef.current) {
                 setContainerWidth(containerRef.current.offsetWidth)
+                setContainerHeight(containerRef.current.offsetHeight)
             }
         }
 
-        updateWidth()
-        const resizeObserver = new ResizeObserver(updateWidth)
+        updateSize()
+        const resizeObserver = new ResizeObserver(updateSize)
         if (containerRef.current) {
             resizeObserver.observe(containerRef.current)
         }
@@ -63,33 +112,18 @@ export default function Visualization() {
     }, [filtered, appliedFilters, collapse])
 
     useEffect(() => {
-        if (highlight == null || !containerRef.current) return
-        const container = containerRef.current
+        if (highlight == null || !listRef.current) return
 
-        function tryScroll(attempt: number) {
-            if (highlight === null) {
-                return
-            }
-
-            const row = findRowContaining(rows, highlight)
-            if (row == null) {
-                setHighlight(null)
-                return
-            }
-
-            const rowElement = container.querySelector(`[data-row-base="${row.base.toString()}"]`)
-            if (rowElement) {
-                centerElement(container, rowElement)
-                return
-            }
-            if (attempt < 5) {
-                requestAnimationFrame(() => {
-                    tryScroll(attempt + 1)
-                })
-            }
+        const row = findRowContaining(rows, highlight)
+        if (row == null) {
+            setHighlight(null)
+            return
         }
 
-        tryScroll(0)
+        const rowIndex = rows.findIndex((r) => r.base === row.base)
+        if (rowIndex !== -1) {
+            listRef.current.scrollToRow({ index: rowIndex, align: 'center', behavior: 'smooth' })
+        }
     }, [highlight, rows, setHighlight])
 
     useEffect(() => {
@@ -127,34 +161,32 @@ export default function Visualization() {
         addrWidth = 100
     }
 
+    // Row height = HeapRowHeight (28) + padding top (8) + padding bottom (8) = 44
+    const rowHeight = HeapRowHeight + 16
+
     return (
         <Box
             ref={containerRef}
-            sx={{ overflow: 'auto', position: 'relative', bgcolor: 'background.default' }}
+            sx={{ height: '100%', width: '100%', bgcolor: 'background.default' }}
         >
-            {rows.map((row) => (
-                <Box
-                    key={`${row.base}`}
-                    data-row-base={row.base.toString()}
-                    sx={{
-                        display: 'flex',
-                        alignItems: 'stretch',
-                        paddingLeft: 1,
-                        paddingRight: 2,
-                        py: 1,
-                        gap: 1,
-                    }}
-                >
-                    <RowWithAddress
-                        row={row}
-                        selected={selected}
-                        setSelected={setSelected}
-                        width={containerWidth}
-                        highlight={highlight}
-                        addrWidth={addrWidth}
-                    />
-                </Box>
-            ))}
+            <List
+                listRef={listRef}
+                rowComponent={Row}
+                rowCount={rows.length}
+                rowHeight={rowHeight}
+                overscanCount={10}
+                rowProps={{
+                    rows,
+                    selected,
+                    setSelected,
+                    containerWidth,
+                    highlight,
+                    addrWidth,
+                }}
+                style={{
+                    height: containerHeight || 600,
+                }}
+            />
         </Box>
     )
 }
@@ -178,14 +210,4 @@ function findRowContaining(rows: RowEntry[], n: bigint): RowEntry | null {
     }
 
     return null // not found
-}
-
-function centerElement(container: Element, el: Element) {
-    const target = el as HTMLElement
-    const containerRect = container.getBoundingClientRect()
-    const targetRect = target.getBoundingClientRect()
-    const current = container.scrollTop
-    const delta =
-        targetRect.top - containerRect.top - container.clientHeight / 2 + targetRect.height / 2
-    container.scrollTo({ top: current + delta, behavior: 'smooth' })
 }
