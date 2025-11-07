@@ -118,7 +118,7 @@ const createFilter = (expression: string): ((e: NormalizedAllocation) => boolean
         const fn = new Function('e', `return (${expression})`)
         return (e) => {
             try {
-                return Boolean(fn.apply(e))
+                return Boolean(fn(e))
             } catch {
                 return false
             }
