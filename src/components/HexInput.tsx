@@ -29,6 +29,7 @@ export default function HexInput({
         <TextField
             label={label}
             size="small"
+            autoComplete="off"
             autoFocus={autoFocus}
             placeholder={placeholder ?? ''}
             value={current != null ? current.toString(16) : ''}

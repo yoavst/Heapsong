@@ -1,4 +1,5 @@
 import type { NormalizedAllocation } from '../types'
+import { formatHex } from './formatting'
 
 const DEFAULT_COLOR = '#4db6ac'
 
@@ -67,4 +68,20 @@ export default function parseInput(input: unknown): NormalizedAllocation[] {
             color: raw.color ?? DEFAULT_COLOR,
         }
     })
+}
+
+export function convertToInputFormat(normalized: NormalizedAllocation): InputAllocation {
+    const { address, size, groupId, actualSize, ...rest } = normalized
+    const result: InputAllocation = {
+        ...rest,
+        address: formatHex(address),
+        size: formatHex(size),
+        groupId: formatHex(groupId),
+    }
+
+    if (actualSize !== size) {
+        result.actualSize = formatHex(actualSize)
+    }
+
+    return result
 }
