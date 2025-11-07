@@ -7,6 +7,7 @@ import JsonTree from '../JsonTree'
 import { formatHex } from '../../utils/formatting'
 import { groupBy } from '../../utils/collections'
 import { NormalizedAllocation } from '../../types'
+import { compare } from '../../utils/bigint'
 
 export default function SearchTab() {
     const [heap] = useAtom(heapAllocationsAtom)
@@ -66,10 +67,10 @@ export default function SearchTab() {
                                 Group {groupId}
                             </Typography>
                             {list
-                                .sort((a, b) => a.address - b.address)
+                                .sort((a, b) => compare(a.address, b.address))
                                 .map((a) => (
                                     <Box
-                                        key={a.address}
+                                        key={a.address.toString()}
                                         sx={{
                                             display: 'flex',
                                             alignItems: 'center',

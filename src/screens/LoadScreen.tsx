@@ -6,6 +6,7 @@ import { heapAllocationsAtom } from '../state/atoms'
 import { useNavigate } from 'react-router-dom'
 import { useToast } from '../components/ToastContext'
 import DropFile from '../components/DropFile'
+import { compare } from '../utils/bigint'
 
 export default function LoadScreen() {
     const setHeap = useSetAtom(heapAllocationsAtom)
@@ -17,7 +18,7 @@ export default function LoadScreen() {
             try {
                 const json: unknown = JSON.parse(data)
                 const normalized = parseInput(json)
-                const sorted = normalized.slice().sort((a, b) => a.address - b.address)
+                const sorted = normalized.slice().sort((a, b) => compare(a.address, b.address))
                 setHeap(sorted)
                 show('Heap loaded successfully', 'success')
                 void navigate('/viz.html')

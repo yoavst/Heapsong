@@ -5,10 +5,10 @@ interface HexInputParams {
     label: string
     placeholder?: string
     fullWidth?: boolean
-    defaultValue?: number | null
+    defaultValue?: bigint | null
     highlightEdit?: boolean
     autoFocus?: boolean
-    setValue: (value: number | null) => void
+    setValue: (value: bigint | null) => void
     apply: () => void
 }
 
@@ -22,7 +22,7 @@ export default function HexInput({
     autoFocus = false,
     fullWidth = false,
 }: HexInputParams) {
-    const [current, setCurrent] = useState<number | null>(defaultValue)
+    const [current, setCurrent] = useState<bigint | null>(defaultValue)
     const isModified = highlightEdit && current !== defaultValue
 
     return (
@@ -42,7 +42,7 @@ export default function HexInput({
             }}
             onChange={(e) => {
                 const hex = e.target.value.replace(/[^0-9a-fA-F]/g, '')
-                const parsed = hex.length ? parseInt(hex, 16) : null
+                const parsed = hex.length ? BigInt('0x' + hex) : null
                 setCurrent(parsed)
                 setValue(parsed)
             }}

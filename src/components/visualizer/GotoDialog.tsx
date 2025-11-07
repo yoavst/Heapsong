@@ -8,7 +8,7 @@ import { useToast } from '../ToastContext'
 
 export default function GotoDialog() {
     const [open, setOpen] = useState(false)
-    const [input, setInput] = useState<number | null>(null)
+    const [input, setInput] = useState<bigint | null>(null)
     const [appliedFilters] = useAtom(appliedFiltersAtom)
     const [heapAllocationsRange] = useAtom(heapAllocationsRangeAtom)
     const setHighlight = useSetAtom(highlightAtom)

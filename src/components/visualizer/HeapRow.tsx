@@ -4,9 +4,9 @@ import { formatHex } from '../../utils/formatting'
 
 interface HeapRowProps {
     row: RowEntry
-    selected: number | null
-    setSelected: (addr: number) => void
-    setHighlight: (addr: number | null) => void
+    selected: bigint | null
+    setSelected: (addr: bigint) => void
+    setHighlight: (addr: bigint | null) => void
 }
 
 export function HeapRow({ row, selected, setSelected, setHighlight }: HeapRowProps) {
@@ -44,12 +44,12 @@ export function HeapRow({ row, selected, setSelected, setHighlight }: HeapRowPro
             ))}
             {row.allocs.map((a) => (
                 <Tooltip
-                    key={a.address}
+                    key={a.address.toString()}
                     title={`${a.type} #${a.groupId} (${formatHex(a.size)}) @ ${formatHex(a.address)}`}
                     arrow
                 >
                     <Box
-                        data-addr={a.address}
+                        data-addr={a.address.toString()}
                         onClick={() => {
                             setSelected(a.address)
                             setHighlight(null)

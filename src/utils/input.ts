@@ -44,17 +44,27 @@ function parseHexOrNumber(value: unknown): number {
     throw new Error(`Invalid numeric value: ${String(value)}`)
 }
 
+function parseHexOrNumberToBigInt(value: unknown): bigint {
+    if (typeof value === 'number') return BigInt(value)
+    if (typeof value === 'string') {
+        const trimmed = value.trim()
+        if (/^0x[0-9a-fA-F]+$/.test(trimmed)) return BigInt(trimmed)
+        if (/^[0-9]+$/.test(trimmed)) return BigInt(trimmed)
+    }
+    throw new Error(`Invalid numeric value: ${String(value)}`)
+}
+
 export default function parseInput(input: unknown): NormalizedAllocation[] {
     if (!Array.isArray(input)) throw new Error('Heap JSON must be an array of entries')
     return input.map((raw, idx) => {
         assertInputAllocation(raw)
 
-        const address = parseHexOrNumber(raw.address)
-        const size = parseHexOrNumber(raw.size)
-        const actualSize = parseHexOrNumber(raw.actualSize ?? raw.size)
+        const address = parseHexOrNumberToBigInt(raw.address)
+        const size = parseHexOrNumberToBigInt(raw.size)
+        const actualSize = parseHexOrNumberToBigInt(raw.actualSize ?? raw.size)
         const groupId = parseHexOrNumber(raw.groupId)
 
-        if (size <= 0 || actualSize < size) {
+        if (size <= 0n || actualSize < size) {
             throw new Error(`Entry ${idx} has invalid size/actualSize: ${JSON.stringify(raw)}`)
         }
 
