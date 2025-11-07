@@ -1,8 +1,8 @@
 export interface NormalizedAllocation {
     type: string
-    address: number
-    size: number
-    actualSize: number
+    address: bigint
+    size: bigint
+    actualSize: bigint
     color: string
     groupId: number
 
@@ -10,15 +10,15 @@ export interface NormalizedAllocation {
 }
 
 export interface AppliedFilters {
-    baseAddress: number | null
-    endAddress: number | null
-    rowSize: number
+    baseAddress: bigint | null
+    endAddress: bigint | null
+    rowSize: bigint
 }
 
 export interface SettingsData {
-    defaultBaseAddress: number | null
-    defaultEndAddress: number | null
-    defaultRowSize: number
+    defaultBaseAddress: bigint | null
+    defaultEndAddress: bigint | null
+    defaultRowSize: bigint
     themeColor: string
     collapseEmptyRows: boolean
     collapseThreshold: number

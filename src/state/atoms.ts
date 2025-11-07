@@ -1,13 +1,10 @@
 import { atom } from 'jotai'
-import { atomWithDefault, atomWithStorage } from 'jotai/utils'
+import { atomWithDefault } from 'jotai/utils'
 
 import type { AppliedFilters, NormalizedAllocation } from '../types'
+import { atomWithStorageOnInit } from '../utils/storage'
 
-export const DEFAULT_ROW_SIZE = 0x1000
-
-const atomWithStorageOnInit = <T>(key: string, defaultValue: T) => {
-    return atomWithStorage(key, defaultValue, undefined, { getOnInit: true })
-}
+export const DEFAULT_ROW_SIZE = BigInt(0x1000)
 
 // #region Settings
 export const themeColorAtom = atomWithStorageOnInit<string>('themeColor', '#7c4dff')
@@ -18,11 +15,15 @@ export const collapseEmptyRowsAtom = atomWithStorageOnInit<{ enabled: boolean; t
         threshold: 1,
     }
 )
-export const defaultFiltersAtom = atomWithStorageOnInit<AppliedFilters>('defaultFilters', {
-    baseAddress: null,
-    endAddress: null,
-    rowSize: DEFAULT_ROW_SIZE,
-})
+export const defaultFiltersAtom = atomWithStorageOnInit<AppliedFilters>(
+    'defaultFilters',
+    {
+        baseAddress: null,
+        endAddress: null,
+        rowSize: DEFAULT_ROW_SIZE,
+    },
+    true
+)
 
 export const sidebarWidthAtom = atomWithStorageOnInit<number>('sidebarWidth', 360)
 // #endregion
@@ -30,9 +31,10 @@ export const sidebarWidthAtom = atomWithStorageOnInit<number>('sidebarWidth', 36
 // #region State
 export const heapAllocationsAtom = atomWithStorageOnInit<NormalizedAllocation[] | null>(
     'heapAllocations',
-    null
+    null,
+    true
 )
-export const heapAllocationsRangeAtom = atom<[base: number, end: number] | null>((get) => {
+export const heapAllocationsRangeAtom = atom<[base: bigint, end: bigint] | null>((get) => {
     const heapAllocations = get(heapAllocationsAtom)
     if (!heapAllocations) return null
     let base = heapAllocations[0].address
@@ -50,7 +52,7 @@ export const appliedFiltersAtom = atomWithDefault<AppliedFilters>((get) => {
     return { ...get(defaultFiltersAtom) }
 })
 
-export const selectedAddressAtom = atom<number | null>(null)
+export const selectedAddressAtom = atom<bigint | null>(null)
 
-export const highlightAtom = atom<number | null>(null)
+export const highlightAtom = atom<bigint | null>(null)
 // #endregion

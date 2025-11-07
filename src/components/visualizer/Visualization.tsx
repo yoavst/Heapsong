@@ -59,7 +59,7 @@ export default function Visualization() {
                 return
             }
 
-            const rowElement = container.querySelector(`[data-row-base="${row.base}"]`)
+            const rowElement = container.querySelector(`[data-row-base="${row.base.toString()}"]`)
             if (rowElement) {
                 centerElement(container, rowElement)
                 return
@@ -117,7 +117,7 @@ export default function Visualization() {
             {rows.map((row) => (
                 <Box
                     key={`${row.base}`}
-                    data-row-base={row.base}
+                    data-row-base={row.base.toString()}
                     sx={{
                         display: 'flex',
                         alignItems: 'stretch',
@@ -160,7 +160,7 @@ export default function Visualization() {
     )
 }
 
-function findRowContaining(rows: RowEntry[], n: number): RowEntry | null {
+function findRowContaining(rows: RowEntry[], n: bigint): RowEntry | null {
     let low = 0
     let high = rows.length - 1
 

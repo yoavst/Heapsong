@@ -1,18 +1,19 @@
 import { NormalizedAllocation } from '../types'
 import { formatHex } from './formatting'
+import { max, min } from './bigint'
 
 const MAX_UNALLOCATED_ROWS = 20
 
 export interface RowAllocSegment {
-    address: number
+    address: bigint
     leftPct: number
     widthPct: number
     requestedPct: number
-    size: number
+    size: bigint
     type: string
     groupId: number
     color: string
-    actualSize: number
+    actualSize: bigint
 }
 export interface RowGap {
     leftPct: number
@@ -20,27 +21,27 @@ export interface RowGap {
     sizeHex: string
 }
 export interface RowEntry {
-    base: number
+    base: bigint
     allocs: RowAllocSegment[]
     gaps: RowGap[]
     collapsed: boolean
-    size: number
+    size: bigint
 }
 
 export function buildRows(
-    list: NormalizedAllocation[],
-    rowSize: number,
-    base: number,
+    allocs: NormalizedAllocation[],
+    rowSize: bigint,
+    base: bigint,
     collapse: { enabled: boolean; threshold: number }
 ): RowEntry[] {
-    if (list.length === 0) return []
+    if (allocs.length === 0) return []
 
-    const allocs = [...list].sort((a, b) => a.address - b.address)
     const rows: RowEntry[] = []
     const halfEmpty = Math.floor(MAX_UNALLOCATED_ROWS / 2)
+    const rowSizeNumber = Number(rowSize)
 
-    // Start with first row covering first allocation’s row
-    const firstIndex = Math.floor((allocs[0].address - base) / rowSize)
+    // Start with first row covering first allocation's row
+    const firstIndex = (allocs[0].address - base) / rowSize
     rows.push(makeRow(base + firstIndex * rowSize, rowSize))
     const lastRow = () => rows[rows.length - 1]
 
@@ -52,14 +53,14 @@ export function buildRows(
         for (const a of sorted) {
             if (a.leftPct > cursor) {
                 const widthPct = a.leftPct - cursor
-                const size = Math.round((widthPct / 100) * rowSize)
+                const size = BigInt(Math.round((widthPct / 100) * rowSizeNumber))
                 row.gaps.push({ leftPct: cursor, widthPct, sizeHex: formatHex(size) })
             }
             cursor = Math.min(100, a.leftPct + a.widthPct)
         }
         if (cursor < 100) {
             const widthPct = 100 - cursor
-            const size = Math.round((widthPct / 100) * rowSize)
+            const size = BigInt(Math.round((widthPct / 100) * rowSizeNumber))
             row.gaps.push({ leftPct: cursor, widthPct, sizeHex: formatHex(size) })
         }
     }
@@ -68,13 +69,13 @@ export function buildRows(
         if (count <= 0) return
         else if (collapse.enabled && count >= collapse.threshold) {
             // Add all empty rows as a single collapsed region
-            rows.push(makeNextRow(lastRow(), count * rowSize, true))
+            rows.push(makeNextRow(lastRow(), BigInt(count) * rowSize, true))
         } else if (count > MAX_UNALLOCATED_ROWS) {
             // pre-empty
             for (let i = 0; i < halfEmpty; i++) rows.push(makeNextRow(lastRow(), rowSize))
             // collapsed region
             const collapsedRows = count - MAX_UNALLOCATED_ROWS
-            rows.push(makeNextRow(lastRow(), collapsedRows * rowSize, true))
+            rows.push(makeNextRow(lastRow(), BigInt(collapsedRows) * rowSize, true))
             // post-empty
             for (let i = 0; i < halfEmpty; i++) rows.push(makeNextRow(lastRow(), rowSize))
         } else {
@@ -85,12 +86,12 @@ export function buildRows(
 
     // main allocation loop
     for (const a of allocs) {
-        const startIndex = Math.floor((a.address - base) / rowSize)
-        const endIndex = Math.floor((a.address + a.actualSize - base - 1) / rowSize)
+        const startIndex = (a.address - base) / rowSize
+        const endIndex = (a.address + a.actualSize - base - 1n) / rowSize
         const targetBase = base + startIndex * rowSize
 
         // compute how many full rows we are away from last existing row
-        const gapRows = Math.floor((targetBase - lastRow().base) / rowSize) - 1
+        const gapRows = Number((targetBase - lastRow().base) / rowSize - 1n)
         if (gapRows >= 0) {
             // close the previous row
             flushRow(lastRow())
@@ -112,14 +113,15 @@ export function buildRows(
         for (let r = startIndex; r <= endIndex; r++) {
             const segBase = base + r * rowSize
             const segEnd = segBase + rowSize
-            const segStart = Math.max(a.address, segBase)
-            const segStop = Math.min(a.address + a.actualSize, segEnd)
+            const segStart = max(a.address, segBase)
+            const segStop = min(a.address + a.actualSize, segEnd)
             const segLen = segStop - segStart
+            const segLenNumber = Number(segLen) // less than row size because of the min/max
 
-            const leftPct = ((segStart - segBase) / rowSize) * 100
-            const widthPct = (segLen / rowSize) * 100
-            const requestedInSeg = Math.min(allocRemaining, segLen)
-            const requestedPct = (requestedInSeg / rowSize) * 100
+            const leftPct = (Number(segStart - segBase) / rowSizeNumber) * 100
+            const widthPct = (segLenNumber / rowSizeNumber) * 100
+            const requestedInSeg = min(allocRemaining, segLen)
+            const requestedPct = (Number(requestedInSeg) / rowSizeNumber) * 100
             allocRemaining -= requestedInSeg
 
             // ensure we have a row for segBase
@@ -144,7 +146,7 @@ export function buildRows(
     return rows
 }
 
-const makeRow = (base: number, size: number, collapsed = false): RowEntry => ({
+const makeRow = (base: bigint, size: bigint, collapsed = false): RowEntry => ({
     base,
     size,
     allocs: [],
@@ -152,5 +154,5 @@ const makeRow = (base: number, size: number, collapsed = false): RowEntry => ({
     collapsed,
 })
 
-const makeNextRow = (currentRow: RowEntry, size: number, collapsed = false): RowEntry =>
+const makeNextRow = (currentRow: RowEntry, size: bigint, collapsed = false): RowEntry =>
     makeRow(currentRow.base + currentRow.size, size, collapsed)
