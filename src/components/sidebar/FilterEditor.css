@@ -1,0 +1,9 @@
+.fakeCodeMirror {
+    background-color: #23262e;
+    color: #a9b2c3;
+    padding-left: 4px;
+    font-size: 0.875rem;
+    font-family: monospace;
+    display: block;
+    user-select: none;
+}

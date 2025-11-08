@@ -1,26 +1,25 @@
-import { Box, Divider, TextField, Typography, Button } from '@mui/material'
-
+import { Box, Divider, Typography } from '@mui/material'
 import { useAtom, useSetAtom } from 'jotai'
 import { heapAllocationsAtom, highlightAtom, selectedAddressAtom } from '../../state/atoms'
 import { useMemo, useState, useRef, useEffect, useCallback } from 'react'
 import JsonTree from '../JsonTree'
 import { groupBy } from '../../utils/collections'
-import { NormalizedAllocation } from '../../types'
 import { compare } from '../../utils/bigint'
 import { List, useListRef } from 'react-window'
 import { SearchTabRow, type ListItem } from './SearchTabRow'
 import GotoGroupDialog from './GotoGroupDialog'
+import FilterEditor from './FilterEditor'
+import { NormalizedAllocation } from '../../types'
 
 export default function SearchTab() {
     const [heap] = useAtom(heapAllocationsAtom)
     const [selected, setSelected] = useAtom(selectedAddressAtom)
     const setHighlight = useSetAtom(highlightAtom)
-    const [pendignSearch, setPendingSearch] = useState<string>('')
-    const [appliedSearch, setAppliedSearch] = useState<string>('')
+    const [appliedFilter, setAppliedFilter] = useState<(e: NormalizedAllocation) => boolean>(() => {
+        return () => true
+    })
     const listRef = useListRef(null)
-
-    const filterFn = useMemo(() => createFilter(appliedSearch), [appliedSearch])
-    const filtered = useMemo(() => (heap ? heap.filter(filterFn) : []), [heap, filterFn])
+    const filtered = useMemo(() => (heap ? heap.filter(appliedFilter) : []), [heap, appliedFilter])
     const grouped = useMemo(() => groupBy(filtered, (e) => e.groupId), [filtered])
 
     const availableGroupIds = useMemo(() => {
@@ -28,6 +27,16 @@ export default function SearchTab() {
             .map(Number)
             .sort((a, b) => a - b)
     }, [grouped])
+
+    const fieldNames = useMemo(() => {
+        const fields: Set<string> = new Set<string>()
+        for (const allocation of heap ?? []) {
+            for (const key of Object.keys(allocation)) {
+                fields.add(key)
+            }
+        }
+        return Array.from(fields)
+    }, [heap])
 
     const listItems = useMemo(() => {
         const items: ListItem[] = []
@@ -90,39 +99,13 @@ export default function SearchTab() {
 
     return (
         <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 2, height: '100%' }}>
-            <Box>
-                <Typography variant="caption" color="text.secondary">
-                    (e) =&gt;
-                </Typography>
-                <TextField
-                    fullWidth
-                    placeholder="e.type === 'FOO'"
-                    minRows={3}
-                    maxRows={8}
-                    multiline
-                    value={pendignSearch}
-                    onChange={(e) => {
-                        setPendingSearch(e.target.value)
-                    }}
-                    onKeyDown={(e) => {
-                        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-                            e.preventDefault()
-                            setAppliedSearch(pendignSearch)
-                        }
-                    }}
-                />
-                <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
-                    <Button
-                        size="small"
-                        variant="contained"
-                        onClick={() => {
-                            setAppliedSearch(pendignSearch)
-                        }}
-                    >
-                        Apply
-                    </Button>
-                </Box>
-            </Box>
+            <FilterEditor
+                fieldNames={fieldNames}
+                defaultValue="return "
+                onApply={(f) => {
+                    setAppliedFilter(() => f)
+                }}
+            />
             <Box ref={containerRef} sx={{ flex: 16, minHeight: 0, height: 0 }}>
                 {listItems.length > 0 ? (
                     <List
@@ -159,26 +142,4 @@ export default function SearchTab() {
             <GotoGroupDialog onGotoGroup={handleGotoGroup} availableGroupIds={availableGroupIds} />
         </Box>
     )
-}
-
-const createFilter = (expression: string): ((e: NormalizedAllocation) => boolean) => {
-    if (!expression.trim()) {
-        return (_e) => true
-    }
-    try {
-        // eslint-disable-next-line @typescript-eslint/no-implied-eval
-        const fn: (e: NormalizedAllocation) => unknown = new Function(
-            'e',
-            `return (${expression})`
-        ) as (e: NormalizedAllocation) => unknown
-        return (e) => {
-            try {
-                return !!fn(e)
-            } catch {
-                return false
-            }
-        }
-    } catch {
-        return () => true
-    }
 }
