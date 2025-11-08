@@ -1,6 +1,11 @@
 import { Box, Divider, Typography } from '@mui/material'
 import { useAtom, useSetAtom } from 'jotai'
-import { heapAllocationsAtom, highlightAtom, selectedAddressAtom } from '../../state/atoms'
+import {
+    defaultSearchShowAllGroupAtom,
+    heapAllocationsAtom,
+    highlightAtom,
+    selectedAddressAtom,
+} from '../../state/atoms'
 import { useMemo, useState, useRef, useEffect, useCallback } from 'react'
 import JsonTree from '../JsonTree'
 import { groupBy } from '../../utils/collections'
@@ -14,6 +19,8 @@ import { NormalizedAllocation } from '../../types'
 export default function SearchTab() {
     const [heap] = useAtom(heapAllocationsAtom)
     const [selected, setSelected] = useAtom(selectedAddressAtom)
+    const [defaultSearchShowAllGroup] = useAtom(defaultSearchShowAllGroupAtom)
+    const [showAllFromGroup, setShowAllFromGroup] = useState(defaultSearchShowAllGroup)
     const setHighlight = useSetAtom(highlightAtom)
     const [appliedFilter, setAppliedFilter] = useState<
         (
@@ -26,10 +33,33 @@ export default function SearchTab() {
     })
     const scope = useMemo(() => new FilterScope(heap ?? []), [heap])
     const listRef = useListRef(null)
-    const filtered = useMemo(
-        () => (heap ? heap.filter((a) => appliedFilter(a, heap, scope)) : []),
-        [heap, appliedFilter, scope]
-    )
+    const { filtered, errorMessage } = useMemo<{
+        filtered: NormalizedAllocation[]
+        errorMessage: string | null
+    }>(() => {
+        if (!heap) return { filtered: [], errorMessage: null }
+
+        let directlyFiltered: NormalizedAllocation[]
+        try {
+            directlyFiltered = heap.filter((a) => appliedFilter(a, heap, scope))
+        } catch (error) {
+            return {
+                filtered: [],
+                errorMessage: error instanceof Error ? error.message : String(error),
+            }
+        }
+
+        if (
+            !showAllFromGroup ||
+            directlyFiltered.length === 0 ||
+            directlyFiltered.length === heap.length
+        ) {
+            return { filtered: directlyFiltered, errorMessage: null }
+        }
+
+        const matchingGroupIds = new Set(directlyFiltered.map((a) => a.groupId))
+        return { filtered: heap.filter((a) => matchingGroupIds.has(a.groupId)), errorMessage: null }
+    }, [heap, appliedFilter, scope, showAllFromGroup])
     const grouped = useMemo(() => groupBy(filtered, (a) => a.groupId), [filtered])
 
     const availableGroupIds = useMemo(() => {
@@ -100,6 +130,8 @@ export default function SearchTab() {
     return (
         <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 2, height: '100%' }}>
             <FilterEditor
+                showAllFromGroup={showAllFromGroup}
+                setShowAllFromGroup={setShowAllFromGroup}
                 allocations={heap}
                 defaultValue="return "
                 onApply={(f) => {
@@ -124,8 +156,16 @@ export default function SearchTab() {
                         }}
                     />
                 ) : (
-                    <Box sx={{ p: 2, textAlign: 'center', color: 'text.secondary' }}>
-                        <Typography variant="body2">No results</Typography>
+                    <Box sx={{ p: 2, textAlign: 'center' }}>
+                        {errorMessage != null ? (
+                            <Typography variant="body2" color="error">
+                                Error evaluating filter: {errorMessage}
+                            </Typography>
+                        ) : (
+                            <Typography variant="body2" color="text.secondary">
+                                No results
+                            </Typography>
+                        )}
                     </Box>
                 )}
             </Box>

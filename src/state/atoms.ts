@@ -26,6 +26,10 @@ export const defaultFiltersAtom = atomWithStorageOnInit<AppliedFilters>(
 )
 
 export const sidebarWidthAtom = atomWithStorageOnInit<number>('sidebarWidth', 360)
+export const defaultSearchShowAllGroupAtom = atomWithStorageOnInit<boolean>(
+    'defaultSearchShowAllGroupAtom',
+    false
+)
 // #endregion
 
 // #region State

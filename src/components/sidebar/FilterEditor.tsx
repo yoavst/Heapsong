@@ -1,4 +1,4 @@
-import { Box, Button } from '@mui/material'
+import { Box, Button, Checkbox, FormControlLabel } from '@mui/material'
 import CodeMirror, { Extension } from '@uiw/react-codemirror'
 import { keymap } from '@codemirror/view'
 import { EditorView } from '@codemirror/view'
@@ -22,9 +22,17 @@ interface FilterEditorProps {
             scope: FilterScope
         ) => boolean
     ) => void
+    showAllFromGroup: boolean
+    setShowAllFromGroup: (showAllFromGroup: boolean) => void
 }
 
-export default function FilterEditor({ defaultValue, onApply, allocations }: FilterEditorProps) {
+export default function FilterEditor({
+    defaultValue,
+    onApply,
+    allocations,
+    showAllFromGroup,
+    setShowAllFromGroup,
+}: FilterEditorProps) {
     const [value, setValue] = useState(defaultValue)
     const { show } = useToast()
 
@@ -114,7 +122,29 @@ export default function FilterEditor({ defaultValue, onApply, allocations }: Fil
                     {'}'}
                 </Box>
             </Box>
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    mt: 1,
+                }}
+            >
+                <FormControlLabel
+                    control={
+                        <Checkbox
+                            checked={showAllFromGroup}
+                            onChange={(e) => {
+                                setShowAllFromGroup(e.target.checked)
+                            }}
+                            size="small"
+                        />
+                    }
+                    label="Show all allocations from the same group"
+                    slotProps={{
+                        typography: { sx: { userSelect: 'none' } },
+                    }}
+                />
                 <Button
                     size="small"
                     variant="contained"
@@ -130,7 +160,7 @@ export default function FilterEditor({ defaultValue, onApply, allocations }: Fil
 }
 
 export class FilterScope {
-    constructor(public allocations: NormalizedAllocation[]) { }
+    constructor(public allocations: NormalizedAllocation[]) {}
 
     min(a: bigint | number, b: bigint | number) {
         if (typeof a == 'number' && typeof b == 'number') {
@@ -147,6 +177,11 @@ export class FilterScope {
     }
 
     adjacentRight(a: NormalizedAllocation | null, type?: string, count = 1) {
+        if (typeof a !== 'object') {
+            throw new Error(
+                'adjacentRight: a is not an allocation. Signature: adjacentRight(a: NormalizedAllocation | null, type?: string, count = 1)'
+            )
+        }
         if (a == null || count <= 0) {
             return null
         }
@@ -165,6 +200,11 @@ export class FilterScope {
     }
 
     adjacentLeft(a: NormalizedAllocation | null, type?: string, count = 1) {
+        if (typeof a !== 'object') {
+            throw new Error(
+                'adjacentRight: a is not an allocation. Signature: adjacentLeft(a: NormalizedAllocation | null, type?: string, count = 1)'
+            )
+        }
         if (a == null || count <= 0) {
             return null
         }
@@ -182,11 +222,26 @@ export class FilterScope {
         return current
     }
 
-    sameGroup(a: NormalizedAllocation | null, type: string) {
+    sameGroup(
+        a: NormalizedAllocation | null,
+        type: string,
+        extraFilter?: (a: NormalizedAllocation) => boolean
+    ) {
+        if (typeof a !== 'object') {
+            throw new Error(
+                'sameGroup: a is not an allocation. Signature: sameGroup(a: NormalizedAllocation | null, type?: string, extraFilter?: (a: NormalizedAllocation) => boolean)'
+            )
+        }
+
         if (a == null) {
             return null
         }
-        return this.allocations.find((a2) => a2.groupId === a.groupId && a2.type === type)
+        return this.allocations.find(
+            (a2) =>
+                a2.groupId === a.groupId &&
+                a2.type === type &&
+                (extraFilter ? extraFilter(a2) : true)
+        )
     }
 }
 
@@ -194,15 +249,14 @@ const createFilter = (
     expression: string
 ):
     | ((
-        a: NormalizedAllocation,
-        allocations: NormalizedAllocation[],
-        scope: FilterScope
-    ) => boolean)
+          a: NormalizedAllocation,
+          allocations: NormalizedAllocation[],
+          scope: FilterScope
+      ) => boolean)
     | string => {
-    if (!expression.trim()) {
+    if (!expression.trim() || expression.trim() === 'return') {
         return () => true
     }
-
     try {
         const fn: (e: NormalizedAllocation, allocations: NormalizedAllocation[]) => unknown =
             // eslint-disable-next-line @typescript-eslint/no-implied-eval
@@ -211,12 +265,7 @@ const createFilter = (
                 allocations: NormalizedAllocation[]
             ) => unknown
         return (a, allocations, scope) => {
-            try {
-                return !!fn.bind(scope)(a, allocations)
-            } catch (error) {
-                console.error(error)
-                return false
-            }
+            return !!fn.bind(scope)(a, allocations)
         }
     } catch (error) {
         console.error(error)

@@ -1,5 +1,10 @@
 import { useAtom } from 'jotai'
-import { collapseEmptyRowsAtom, DEFAULT_ROW_SIZE, defaultFiltersAtom } from '../../state/atoms'
+import {
+    collapseEmptyRowsAtom,
+    DEFAULT_ROW_SIZE,
+    defaultFiltersAtom,
+    defaultSearchShowAllGroupAtom,
+} from '../../state/atoms'
 import { useCallback, useRef } from 'react'
 import { AppliedFilters } from '../../types'
 import {
@@ -16,6 +21,9 @@ import HexInput from '../HexInput'
 export default function SettingsTab() {
     const [collapse, setCollapse] = useAtom(collapseEmptyRowsAtom)
     const [defaultFilters, setDefaultFilters] = useAtom(defaultFiltersAtom)
+    const [defaultSearchShowAllGroup, setDefaultSearchShowAllGroup] = useAtom(
+        defaultSearchShowAllGroupAtom
+    )
     const pendingDefaultFilterChanges = useRef<Partial<AppliedFilters>>({})
 
     const applyDefaultFilterChanges = useCallback(() => {
@@ -50,6 +58,22 @@ export default function SettingsTab() {
                 slotProps={{
                     input: { inputProps: { min: 1 } },
                 }}
+            />
+
+            <FormControlLabel
+                control={
+                    <Switch
+                        checked={defaultSearchShowAllGroup}
+                        onChange={(_, checked) => {
+                            setDefaultSearchShowAllGroup(checked)
+                        }}
+                    />
+                }
+                label={
+                    defaultSearchShowAllGroup
+                        ? 'Search: By default show the whole group for results.'
+                        : "Search: By default do not show the whole group for results."
+                }
             />
             <Divider />
             <Typography variant="subtitle2">Default Parameters</Typography>
