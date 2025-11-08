@@ -15,28 +15,23 @@ export default function SearchTab() {
     const [heap] = useAtom(heapAllocationsAtom)
     const [selected, setSelected] = useAtom(selectedAddressAtom)
     const setHighlight = useSetAtom(highlightAtom)
-    const [appliedFilter, setAppliedFilter] = useState<(e: NormalizedAllocation) => boolean>(() => {
+    const [appliedFilter, setAppliedFilter] = useState<
+        (a: NormalizedAllocation, allocations: NormalizedAllocation[]) => boolean
+    >(() => {
         return () => true
     })
     const listRef = useListRef(null)
-    const filtered = useMemo(() => (heap ? heap.filter(appliedFilter) : []), [heap, appliedFilter])
-    const grouped = useMemo(() => groupBy(filtered, (e) => e.groupId), [filtered])
+    const filtered = useMemo(
+        () => (heap ? heap.filter((a) => appliedFilter(a, heap)) : []),
+        [heap, appliedFilter]
+    )
+    const grouped = useMemo(() => groupBy(filtered, (a) => a.groupId), [filtered])
 
     const availableGroupIds = useMemo(() => {
         return Object.keys(grouped)
             .map(Number)
             .sort((a, b) => a - b)
     }, [grouped])
-
-    const fieldNames = useMemo(() => {
-        const fields: Set<string> = new Set<string>()
-        for (const allocation of heap ?? []) {
-            for (const key of Object.keys(allocation)) {
-                fields.add(key)
-            }
-        }
-        return Array.from(fields)
-    }, [heap])
 
     const listItems = useMemo(() => {
         const items: ListItem[] = []
@@ -100,7 +95,7 @@ export default function SearchTab() {
     return (
         <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 2, height: '100%' }}>
             <FilterEditor
-                fieldNames={fieldNames}
+                allocations={heap}
                 defaultValue="return "
                 onApply={(f) => {
                     setAppliedFilter(() => f)

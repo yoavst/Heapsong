@@ -14,13 +14,25 @@ import { completeFromList, ifNotIn } from '@codemirror/autocomplete'
 
 interface FilterEditorProps {
     defaultValue: string
-    fieldNames: string[]
-    onApply: (filter: (e: NormalizedAllocation) => boolean) => void
+    allocations: NormalizedAllocation[] | null
+    onApply: (
+        filter: (e: NormalizedAllocation, allocations: NormalizedAllocation[]) => boolean
+    ) => void
 }
 
-export default function FilterEditor({ defaultValue, onApply, fieldNames }: FilterEditorProps) {
+export default function FilterEditor({ defaultValue, onApply, allocations }: FilterEditorProps) {
     const [value, setValue] = useState(defaultValue)
     const { show } = useToast()
+
+    const fieldNames = useMemo(() => {
+        const fields: Set<string> = new Set<string>()
+        for (const allocation of allocations ?? []) {
+            for (const key of Object.keys(allocation)) {
+                fields.add(key)
+            }
+        }
+        return Array.from(fields)
+    }, [allocations])
 
     const handleApply = useCallback(() => {
         const trimmed = value.trim()
@@ -71,12 +83,12 @@ export default function FilterEditor({ defaultValue, onApply, fieldNames }: Filt
                 }}
             >
                 <Box component="code" className="fakeCodeMirror">
-                    {'(e) => {'}
+                    {'(a, allocations) => {'}
                 </Box>
                 <CodeMirror
                     value={value}
                     onChange={setValue}
-                    placeholder="return e.type === 'FOO'"
+                    placeholder="return a.type === 'FOO' && adjacentRight(a, 'FOO')"
                     height="auto"
                     minHeight="72px"
                     maxHeight="192px"
@@ -102,35 +114,50 @@ export default function FilterEditor({ defaultValue, onApply, fieldNames }: Filt
     )
 }
 
-const FilterScope = {
-    min: (a: bigint | number, b: bigint | number) => {
-        if (typeof a == 'number' && typeof b == 'number') {
-            return Math.min(a, b)
-        }
-        return BigInt(a) < BigInt(b) ? BigInt(a) : BigInt(b)
-    },
-    max: (a: bigint | number, b: bigint | number) => {
-        if (typeof a == 'number' && typeof b == 'number') {
-            return Math.max(a, b)
-        }
-        return BigInt(a) > BigInt(b) ? BigInt(a) : BigInt(b)
-    },
+function FilterScope(allocations: NormalizedAllocation[]) {
+    return {
+        min: (a: bigint | number, b: bigint | number) => {
+            if (typeof a == 'number' && typeof b == 'number') {
+                return Math.min(a, b)
+            }
+            return BigInt(a) < BigInt(b) ? BigInt(a) : BigInt(b)
+        },
+        max: (a: bigint | number, b: bigint | number) => {
+            if (typeof a == 'number' && typeof b == 'number') {
+                return Math.max(a, b)
+            }
+            return BigInt(a) > BigInt(b) ? BigInt(a) : BigInt(b)
+        },
+        adjacentRight: (a: NormalizedAllocation, type?: string) => {
+            const endOfAllocation = a.address + a.actualSize
+            return allocations.find(
+                (a2) => a2.address === endOfAllocation && (type ? a2.type === type : true)
+            )
+        },
+        adjacentLeft: (a: NormalizedAllocation, type?: string) => {
+            return allocations.find(
+                (a2) => a2.address + a2.actualSize === a.address && (type ? a2.type === type : true)
+            )
+        },
+    }
 }
 
-const createFilter = (expression: string): ((e: NormalizedAllocation) => boolean) | string => {
+const createFilter = (
+    expression: string
+): ((a: NormalizedAllocation, allocations: NormalizedAllocation[]) => boolean) | string => {
     if (!expression.trim()) {
-        return (_e) => true
+        return () => true
     }
 
     try {
-        // eslint-disable-next-line @typescript-eslint/no-implied-eval
-        const fn: (e: NormalizedAllocation) => unknown = new Function(
-            'e',
-            `with(this) {${expression}}`
-        ).bind(FilterScope) as (e: NormalizedAllocation) => unknown
-        return (e) => {
+        const fn: (e: NormalizedAllocation, allocations: NormalizedAllocation[]) => unknown =
+            // eslint-disable-next-line @typescript-eslint/no-implied-eval
+            new Function('a', 'allocations', `with(this(allocations)) {${expression}}`).bind(
+                FilterScope
+            ) as (a: NormalizedAllocation, allocations: NormalizedAllocation[]) => unknown
+        return (a, allocations) => {
             try {
-                return !!fn(e)
+                return !!fn(a, allocations)
             } catch (error) {
                 console.error(error)
                 return false
@@ -143,13 +170,14 @@ const createFilter = (expression: string): ((e: NormalizedAllocation) => boolean
 }
 
 function javascriptCompletions(fieldNames: string[]): Extension[] {
-    const e: Record<string, unknown> = Object.create(null) as Record<string, unknown>
+    const a: Record<string, unknown> = Object.create(null) as Record<string, unknown>
     for (const fieldName of fieldNames) {
-        e[fieldName] = null
+        a[fieldName] = null
     }
     const fakeScope: Record<string, unknown> = Object.create(null) as Record<string, unknown>
-    fakeScope.e = e
-    for (const [key, value] of Object.entries(FilterScope)) {
+    fakeScope.a = a
+    fakeScope.allocations = [a]
+    for (const [key, value] of Object.entries(FilterScope([]))) {
         if (typeof value === 'function') {
             fakeScope[key] = () => null
         } else {
