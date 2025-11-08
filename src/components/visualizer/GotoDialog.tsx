@@ -1,14 +1,19 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material'
 import { useAtom, useSetAtom } from 'jotai'
 import { useCallback, useState } from 'react'
-import { appliedFiltersAtom, heapAllocationsRangeAtom, highlightAtom } from '../../state/atoms'
+import {
+    appliedFiltersAtom,
+    heapAllocationsRangeAtom,
+    highlightAtom,
+    gotoDialogOpenAtom,
+} from '../../state/atoms'
 import { formatHex } from '../../utils/formatting'
 import HexInput from '../HexInput'
 import { useToast } from '../ToastContext'
 import { useHotkeys } from 'react-hotkeys-hook'
 
 export default function GotoDialog() {
-    const [open, setOpen] = useState(false)
+    const [open, setOpen] = useAtom(gotoDialogOpenAtom)
     const [input, setInput] = useState<bigint | null>(null)
     const [appliedFilters] = useAtom(appliedFiltersAtom)
     const [heapAllocationsRange] = useAtom(heapAllocationsRangeAtom)
@@ -23,6 +28,10 @@ export default function GotoDialog() {
         { preventDefault: true },
         [setOpen]
     )
+
+    if (!open && input !== null) {
+        setInput(null)
+    }
 
     const apply = useCallback(() => {
         if (input == null) {
@@ -48,11 +57,11 @@ export default function GotoDialog() {
 
         setHighlight(input)
         setOpen(false)
-        setInput(null)
-    }, [appliedFilters, heapAllocationsRange, input, setHighlight, show])
+    }, [appliedFilters, heapAllocationsRange, input, setHighlight, setOpen, show])
 
     return (
         <Dialog
+            disableRestoreFocus
             open={open}
             onClose={() => {
                 setOpen(false)

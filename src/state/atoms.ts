@@ -55,4 +55,8 @@ export const appliedFiltersAtom = atomWithDefault<AppliedFilters>((get) => {
 export const selectedAddressAtom = atom<bigint | null>(null)
 
 export const highlightAtom = atom<bigint | null>(null)
+
+export const gotoDialogOpenAtom = atom<boolean>(false)
+
+export const gotoGroupDialogOpenAtom = atom<boolean>(false)
 // #endregion

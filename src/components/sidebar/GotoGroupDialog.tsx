@@ -1,8 +1,10 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from '@mui/material'
+import { useAtom } from 'jotai'
 import { useCallback, useState } from 'react'
 import { useToast } from '../ToastContext'
 import { useHotkeys } from 'react-hotkeys-hook'
 import { getMetaKey } from '../../utils/os'
+import { gotoGroupDialogOpenAtom } from '../../state/atoms'
 
 interface GotoGroupDialogProps {
     onGotoGroup: (groupId: number) => void
@@ -10,7 +12,7 @@ interface GotoGroupDialogProps {
 }
 
 export default function GotoGroupDialog({ onGotoGroup, availableGroupIds }: GotoGroupDialogProps) {
-    const [open, setOpen] = useState(false)
+    const [open, setOpen] = useAtom(gotoGroupDialogOpenAtom)
     const [input, setInput] = useState<string>('')
     const { show } = useToast()
 
@@ -22,6 +24,10 @@ export default function GotoGroupDialog({ onGotoGroup, availableGroupIds }: Goto
         { preventDefault: true },
         [setOpen]
     )
+
+    if (!open && input !== '') {
+        setInput('')
+    }
 
     const apply = useCallback(() => {
         const trimmed = input.trim()
@@ -48,6 +54,7 @@ export default function GotoGroupDialog({ onGotoGroup, availableGroupIds }: Goto
 
     return (
         <Dialog
+            disableRestoreFocus
             open={open}
             onClose={() => {
                 setOpen(false)

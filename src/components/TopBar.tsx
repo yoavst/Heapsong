@@ -12,8 +12,15 @@ import {
     Link,
 } from '@mui/material'
 import FileDownloadIcon from '@mui/icons-material/FileDownload'
-import { useAtom } from 'jotai'
-import { appliedFiltersAtom, DEFAULT_ROW_SIZE, heapAllocationsAtom } from '../state/atoms'
+import AssistantNavigationIcon from '@mui/icons-material/AssistantNavigation'
+import { useAtom, useSetAtom } from 'jotai'
+import {
+    appliedFiltersAtom,
+    DEFAULT_ROW_SIZE,
+    heapAllocationsAtom,
+    gotoDialogOpenAtom,
+    gotoGroupDialogOpenAtom,
+} from '../state/atoms'
 import HexInput from './HexInput'
 import { useCallback, useRef } from 'react'
 import { AppliedFilters } from '../types'
@@ -25,6 +32,8 @@ import { useHotkeys } from 'react-hotkeys-hook'
 export default function TopBar() {
     const [appliedFilters, setAppliedFilter] = useAtom(appliedFiltersAtom)
     const [heap] = useAtom(heapAllocationsAtom)
+    const setGotoDialogOpen = useSetAtom(gotoDialogOpenAtom)
+    const setGotoGroupDialogOpen = useSetAtom(gotoGroupDialogOpenAtom)
     const pendingFilterChanges = useRef<Partial<AppliedFilters>>({})
 
     const applyAll = () => {
@@ -110,6 +119,21 @@ export default function TopBar() {
                         Apply
                     </Button>
                     <Box flex={1} />
+                    <Tooltip title="Go to address (right click: Go to group)">
+                        <IconButton
+                            onClick={(e) => {
+                                e.preventDefault()
+                                setGotoDialogOpen(true)
+                            }}
+                            onContextMenu={(e) => {
+                                e.preventDefault()
+                                setGotoGroupDialogOpen(true)
+                            }}
+                            disabled={!heap || heap.length === 0}
+                        >
+                            <AssistantNavigationIcon />
+                        </IconButton>
+                    </Tooltip>
                     <Tooltip title="Export JSON">
                         <IconButton
                             onClick={handleExportJson}
