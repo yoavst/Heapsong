@@ -19,14 +19,21 @@ export default function VisualizerScreen() {
     useEffect(() => {
         function onMove(e: MouseEvent) {
             if (!dragging) return
+            e.preventDefault()
             setSidebarWidth(Math.max(260, Math.min(640, window.innerWidth - e.clientX)))
         }
         function onUp() {
             setDragging(false)
         }
-        window.addEventListener('mousemove', onMove)
-        window.addEventListener('mouseup', onUp)
+        if (dragging) {
+            // Prevent text selection during drag
+            document.body.style.userSelect = 'none'
+            window.addEventListener('mousemove', onMove)
+            window.addEventListener('mouseup', onUp)
+        }
         return () => {
+            // Restore text selection when done dragging
+            document.body.style.userSelect = ''
             window.removeEventListener('mousemove', onMove)
             window.removeEventListener('mouseup', onUp)
         }
@@ -52,7 +59,8 @@ export default function VisualizerScreen() {
                 <Visualization />
                 <Box
                     ref={dividerRef}
-                    onMouseDown={() => {
+                    onMouseDown={(e) => {
+                        e.preventDefault()
                         setDragging(true)
                     }}
                     sx={{ cursor: 'col-resize', bgcolor: dragging ? 'primary.main' : 'divider' }}

@@ -72,7 +72,7 @@ export default function SettingsTab() {
                 label={
                     defaultSearchShowAllGroup
                         ? 'Search: By default show the whole group for results.'
-                        : "Search: By default do not show the whole group for results."
+                        : 'Search: By default do not show the whole group for results.'
                 }
             />
             <Divider />

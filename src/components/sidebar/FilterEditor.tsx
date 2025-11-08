@@ -140,7 +140,7 @@ export default function FilterEditor({
                             size="small"
                         />
                     }
-                    label="Show all allocations from the same group"
+                    label="Show all allocations from a result's group"
                     slotProps={{
                         typography: { sx: { userSelect: 'none' } },
                     }}
@@ -160,7 +160,7 @@ export default function FilterEditor({
 }
 
 export class FilterScope {
-    constructor(public allocations: NormalizedAllocation[]) {}
+    constructor(public allocations: NormalizedAllocation[]) { }
 
     min(a: bigint | number, b: bigint | number) {
         if (typeof a == 'number' && typeof b == 'number') {
@@ -249,10 +249,10 @@ const createFilter = (
     expression: string
 ):
     | ((
-          a: NormalizedAllocation,
-          allocations: NormalizedAllocation[],
-          scope: FilterScope
-      ) => boolean)
+        a: NormalizedAllocation,
+        allocations: NormalizedAllocation[],
+        scope: FilterScope
+    ) => boolean)
     | string => {
     if (!expression.trim() || expression.trim() === 'return') {
         return () => true
