@@ -1,10 +1,11 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material'
 import { useAtom, useSetAtom } from 'jotai'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { appliedFiltersAtom, heapAllocationsRangeAtom, highlightAtom } from '../../state/atoms'
 import { formatHex } from '../../utils/formatting'
 import HexInput from '../HexInput'
 import { useToast } from '../ToastContext'
+import { useHotkeys } from 'react-hotkeys-hook'
 
 export default function GotoDialog() {
     const [open, setOpen] = useState(false)
@@ -14,17 +15,14 @@ export default function GotoDialog() {
     const setHighlight = useSetAtom(highlightAtom)
     const { show } = useToast()
 
-    useEffect(() => {
-        const onKey = (e: KeyboardEvent) => {
-            if (e.key.toLowerCase() === 'g') {
-                setOpen(true)
-            }
-        }
-        window.addEventListener('keydown', onKey)
-        return () => {
-            window.removeEventListener('keydown', onKey)
-        }
-    }, [])
+    useHotkeys(
+        'g',
+        () => {
+            setOpen(true)
+        },
+        { preventDefault: true },
+        [setOpen]
+    )
 
     const apply = useCallback(() => {
         if (input == null) {

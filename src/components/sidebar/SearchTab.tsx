@@ -2,13 +2,14 @@ import { Box, Divider, TextField, Typography, Button } from '@mui/material'
 
 import { useAtom, useSetAtom } from 'jotai'
 import { heapAllocationsAtom, highlightAtom, selectedAddressAtom } from '../../state/atoms'
-import { useMemo, useState, useRef, useEffect } from 'react'
+import { useMemo, useState, useRef, useEffect, useCallback } from 'react'
 import JsonTree from '../JsonTree'
 import { groupBy } from '../../utils/collections'
 import { NormalizedAllocation } from '../../types'
 import { compare } from '../../utils/bigint'
-import { List } from 'react-window'
+import { List, useListRef } from 'react-window'
 import { SearchTabRow, type ListItem } from './SearchTabRow'
+import GotoGroupDialog from './GotoGroupDialog'
 
 export default function SearchTab() {
     const [heap] = useAtom(heapAllocationsAtom)
@@ -16,17 +17,24 @@ export default function SearchTab() {
     const setHighlight = useSetAtom(highlightAtom)
     const [pendignSearch, setPendingSearch] = useState<string>('')
     const [appliedSearch, setAppliedSearch] = useState<string>('')
+    const listRef = useListRef(null)
 
     const filterFn = useMemo(() => createFilter(appliedSearch), [appliedSearch])
     const filtered = useMemo(() => (heap ? heap.filter(filterFn) : []), [heap, filterFn])
     const grouped = useMemo(() => groupBy(filtered, (e) => e.groupId), [filtered])
+
+    const availableGroupIds = useMemo(() => {
+        return Object.keys(grouped)
+            .map(Number)
+            .sort((a, b) => a - b)
+    }, [grouped])
 
     const listItems = useMemo(() => {
         const items: ListItem[] = []
         const sortedGroups = Object.entries(grouped).sort((a, b) => Number(a[0]) - Number(b[0]))
 
         for (const [groupId, list] of sortedGroups) {
-            items.push({ type: 'group', groupId })
+            items.push({ type: 'group', groupId: Number(groupId) })
             const sortedList = [...list].sort((a, b) => compare(a.address, b.address))
             for (const allocation of sortedList) {
                 items.push({ type: 'item', allocation })
@@ -38,6 +46,29 @@ export default function SearchTab() {
 
     const containerRef = useRef<HTMLDivElement | null>(null)
     const [containerHeight, setContainerHeight] = useState(0)
+
+    const handleGotoGroup = useCallback(
+        (groupId: number) => {
+            // Find the index of the group in listItems
+            const groupIndex = listItems.findIndex(
+                (item) => item.type === 'group' && item.groupId === groupId
+            )
+
+            if (groupIndex === -1) {
+                return
+            }
+
+            // Scroll to the group
+            if (listRef.current) {
+                listRef.current.scrollToRow({
+                    index: groupIndex,
+                    align: 'start',
+                    behavior: 'smooth',
+                })
+            }
+        },
+        [listItems, listRef]
+    )
 
     useEffect(() => {
         const updateHeight = () => {
@@ -95,6 +126,7 @@ export default function SearchTab() {
             <Box ref={containerRef} sx={{ flex: 16, minHeight: 0, height: 0 }}>
                 {listItems.length > 0 ? (
                     <List
+                        listRef={listRef}
                         rowComponent={SearchTabRow}
                         rowCount={listItems.length}
                         rowHeight={32}
@@ -124,6 +156,7 @@ export default function SearchTab() {
                     </Typography>
                 )}
             </Box>
+            <GotoGroupDialog onGotoGroup={handleGotoGroup} availableGroupIds={availableGroupIds} />
         </Box>
     )
 }

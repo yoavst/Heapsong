@@ -15,10 +15,12 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload'
 import { useAtom } from 'jotai'
 import { appliedFiltersAtom, DEFAULT_ROW_SIZE, heapAllocationsAtom } from '../state/atoms'
 import HexInput from './HexInput'
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useRef } from 'react'
 import { AppliedFilters } from '../types'
 import { convertToInputFormat } from '../utils/input'
 import { downloadFile } from '../utils/download'
+import { getMetaKey } from '../utils/os'
+import { useHotkeys } from 'react-hotkeys-hook'
 
 export default function TopBar() {
     const [appliedFilters, setAppliedFilter] = useAtom(appliedFiltersAtom)
@@ -37,20 +39,14 @@ export default function TopBar() {
         downloadFile(json, 'heap-export.json', 'application/json')
     }, [heap])
 
-    useEffect(() => {
-        const isMac = navigator.userAgentData?.platform.toUpperCase().includes('MAC') ?? false
-        const onKey = (e: KeyboardEvent) => {
-            if (e.key.toLowerCase() === 's' && ((!isMac && e.ctrlKey) || (isMac && e.metaKey))) {
-                e.preventDefault()
-                e.stopPropagation()
-                handleExportJson()
-            }
-        }
-        window.addEventListener('keydown', onKey)
-        return () => {
-            window.removeEventListener('keydown', onKey)
-        }
-    }, [handleExportJson])
+    useHotkeys(
+        `${getMetaKey()}+s`,
+        () => {
+            handleExportJson()
+        },
+        { preventDefault: true },
+        [handleExportJson]
+    )
 
     return (
         <AppBar

@@ -4,7 +4,7 @@ import { NormalizedAllocation } from '../../types'
 import { formatHex } from '../../utils/formatting'
 
 export type ListItem =
-    | { type: 'group'; groupId: string }
+    | { type: 'group'; groupId: number }
     | { type: 'item'; allocation: NormalizedAllocation }
 
 export interface SearchTabRowProps {
