@@ -8,7 +8,7 @@ import { compare } from '../../utils/bigint'
 import { List, useListRef } from 'react-window'
 import { SearchTabRow, type ListItem } from './SearchTabRow'
 import GotoGroupDialog from './GotoGroupDialog'
-import FilterEditor from './FilterEditor'
+import FilterEditor, { FilterScope } from './FilterEditor'
 import { NormalizedAllocation } from '../../types'
 
 export default function SearchTab() {
@@ -16,14 +16,19 @@ export default function SearchTab() {
     const [selected, setSelected] = useAtom(selectedAddressAtom)
     const setHighlight = useSetAtom(highlightAtom)
     const [appliedFilter, setAppliedFilter] = useState<
-        (a: NormalizedAllocation, allocations: NormalizedAllocation[]) => boolean
+        (
+            a: NormalizedAllocation,
+            allocations: NormalizedAllocation[],
+            scope: FilterScope
+        ) => boolean
     >(() => {
         return () => true
     })
+    const scope = useMemo(() => new FilterScope(heap ?? []), [heap])
     const listRef = useListRef(null)
     const filtered = useMemo(
-        () => (heap ? heap.filter((a) => appliedFilter(a, heap)) : []),
-        [heap, appliedFilter]
+        () => (heap ? heap.filter((a) => appliedFilter(a, heap, scope)) : []),
+        [heap, appliedFilter, scope]
     )
     const grouped = useMemo(() => groupBy(filtered, (a) => a.groupId), [filtered])
 
