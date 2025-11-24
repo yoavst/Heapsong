@@ -214,7 +214,6 @@ const TopBar = forwardRef<TopBarHandle>((_, ref) => {
                         HeapSong
                     </Typography>
 
-
                     <Box
                         sx={{
                             flex: 1,
@@ -229,9 +228,7 @@ const TopBar = forwardRef<TopBarHandle>((_, ref) => {
                             value={String(activeTabId)}
                             onChange={(_, newValue: string | number) => {
                                 const numValue =
-                                    typeof newValue === 'string'
-                                        ? parseInt(newValue, 10)
-                                        : newValue
+                                    typeof newValue === 'string' ? parseInt(newValue, 10) : newValue
                                 if (typeof numValue === 'number' && !isNaN(numValue)) {
                                     setActiveTabId(numValue)
                                 }
@@ -260,7 +257,10 @@ const TopBar = forwardRef<TopBarHandle>((_, ref) => {
                                     onContextMenu={(e) => {
                                         e.preventDefault()
                                         e.stopPropagation()
-                                        setContextMenu({ anchorEl: e.currentTarget as HTMLElement, tabId: tab.id })
+                                        setContextMenu({
+                                            anchorEl: e.currentTarget as HTMLElement,
+                                            tabId: tab.id,
+                                        })
                                     }}
                                 />
                             ))}
@@ -275,7 +275,6 @@ const TopBar = forwardRef<TopBarHandle>((_, ref) => {
                         </IconButton>
                         <ActionButtons activeTab={activeTab} />
                     </Box>
-
                 </Toolbar>
             </AppBar>
 

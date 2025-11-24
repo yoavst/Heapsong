@@ -1,3 +1,5 @@
+/// <reference types="user-agent-data-types" />
+
 /**
  * Returns true if the user is on a Mac
  */
