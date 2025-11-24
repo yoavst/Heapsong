@@ -1,16 +1,11 @@
 import { Box } from '@mui/material'
 import { useAtom } from 'jotai'
-import {
-    appliedFiltersAtom,
-    heapAllocationsAtom,
-    selectedAddressAtom,
-    collapseEmptyRowsAtom,
-    highlightAtom,
-} from '../../state/atoms'
+import { collapseEmptyRowsAtom } from '../../state/atoms'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { buildRows, RowEntry } from '../../utils/rows'
 import { RowWithAddress, HeapRowHeight } from './HeapRow'
 import { List, RowComponentProps, useListRef } from 'react-window'
+import { AppliedFilters, NormalizedAllocation } from '../../types'
 
 interface RowProps {
     rows: RowEntry[]
@@ -19,6 +14,15 @@ interface RowProps {
     containerWidth: number
     highlight: bigint | null
     addrWidth: number
+}
+
+interface VisualizationProps {
+    heap: NormalizedAllocation[]
+    appliedFilters: AppliedFilters
+    selected: bigint | null
+    setSelected: (addr: bigint | null) => void
+    highlight: bigint | null
+    setHighlight: (addr: bigint | null) => void
 }
 
 function Row({
@@ -61,12 +65,16 @@ function Row({
     )
 }
 
-export default function Visualization() {
-    const [heap] = useAtom(heapAllocationsAtom)
-    const [appliedFilters] = useAtom(appliedFiltersAtom)
-    const [selected, setSelected] = useAtom(selectedAddressAtom)
+export default function Visualization({
+    heap,
+    appliedFilters,
+    selected,
+    setSelected,
+    highlight,
+    setHighlight,
+}: VisualizationProps) {
     const [collapse] = useAtom(collapseEmptyRowsAtom)
-    const [highlight, setHighlight] = useAtom(highlightAtom)
+
     const containerRef = useRef<HTMLDivElement | null>(null)
     const listRef = useListRef(null)
     const [containerWidth, setContainerWidth] = useState(0)
@@ -92,7 +100,7 @@ export default function Visualization() {
     }, [])
 
     const filtered = useMemo(() => {
-        if (!heap) return []
+        if (!heap.length) return []
         return heap.filter((a) => {
             if (
                 appliedFilters.baseAddress != null &&

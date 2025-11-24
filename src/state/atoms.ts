@@ -1,8 +1,6 @@
-import { atom } from 'jotai'
-import { atomWithDefault } from 'jotai/utils'
-
 import type { AppliedFilters, NormalizedAllocation } from '../types'
 import { atomWithStorageOnInit } from '../utils/storage'
+import { atom } from 'jotai'
 
 export const DEFAULT_ROW_SIZE = BigInt(0x1000)
 
@@ -32,35 +30,20 @@ export const defaultSearchShowAllGroupAtom = atomWithStorageOnInit<boolean>(
 )
 // #endregion
 
-// #region State
-export const heapAllocationsAtom = atomWithStorageOnInit<NormalizedAllocation[] | null>(
-    'heapAllocations',
-    null,
-    true
-)
-export const heapAllocationsRangeAtom = atom<[base: bigint, end: bigint] | null>((get) => {
-    const heapAllocations = get(heapAllocationsAtom)
-    if (!heapAllocations) return null
-    let base = heapAllocations[0].address
-    let end = heapAllocations[0].address + heapAllocations[0].actualSize
+// #region Tab Management
+export interface Tab {
+    id: number
+    name: string
+    heapAllocations: NormalizedAllocation[] | null
+    appliedFilters: AppliedFilters
+}
 
-    for (const heapAllocation of heapAllocations) {
-        if (heapAllocation.address < base) base = heapAllocation.address
-        const allocEnd = heapAllocation.address + heapAllocation.actualSize
-        if (allocEnd > end) end = allocEnd
-    }
-    return [base, end]
-})
+export const tabsAtom = atomWithStorageOnInit<Tab[]>('tabs', [], true)
 
-export const appliedFiltersAtom = atomWithDefault<AppliedFilters>((get) => {
-    return { ...get(defaultFiltersAtom) }
-})
+export const activeTabIdAtom = atomWithStorageOnInit<number | null>('activeTabId', null, true)
+// #endregion
 
-export const selectedAddressAtom = atom<bigint | null>(null)
-
-export const highlightAtom = atom<bigint | null>(null)
-
+// #region Dialog State
 export const gotoDialogOpenAtom = atom<boolean>(false)
-
 export const gotoGroupDialogOpenAtom = atom<boolean>(false)
 // #endregion

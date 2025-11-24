@@ -1,27 +1,38 @@
 import { Box, Divider, Typography } from '@mui/material'
-import { useAtom, useSetAtom } from 'jotai'
-import {
-    defaultSearchShowAllGroupAtom,
-    heapAllocationsAtom,
-    highlightAtom,
-    selectedAddressAtom,
-} from '../../state/atoms'
+import { useAtom } from 'jotai'
+import { defaultSearchShowAllGroupAtom } from '../../state/atoms'
 import { useMemo, useState, useRef, useEffect, useCallback } from 'react'
 import JsonTree from '../JsonTree'
 import { groupBy } from '../../utils/collections'
 import { compare } from '../../utils/bigint'
 import { List, useListRef } from 'react-window'
 import { SearchTabRow, type ListItem } from './SearchTabRow'
-import GotoGroupDialog from './GotoGroupDialog'
 import FilterEditor, { FilterScope } from './FilterEditor'
 import { NormalizedAllocation } from '../../types'
 
-export default function SearchTab() {
-    const [heap] = useAtom(heapAllocationsAtom)
-    const [selected, setSelected] = useAtom(selectedAddressAtom)
+interface SearchTabProps {
+    heapAllocations: NormalizedAllocation[] | null
+    setSelected: (addr: bigint | null) => void
+    setHighlight: (addr: bigint | null) => void
+    getSelected: () => bigint | null
+    setAvailableGroupIds: (ids: number[]) => void
+    setOnGotoGroup: (callback: (groupId: number) => void) => void
+}
+
+export default function SearchTab({
+    heapAllocations: heap,
+    setSelected,
+    setHighlight,
+    getSelected,
+    setAvailableGroupIds,
+    setOnGotoGroup,
+}: SearchTabProps) {
     const [defaultSearchShowAllGroup] = useAtom(defaultSearchShowAllGroupAtom)
     const [showAllFromGroup, setShowAllFromGroup] = useState(defaultSearchShowAllGroup)
-    const setHighlight = useSetAtom(highlightAtom)
+    const selected = getSelected()
+    const scope = useMemo(() => new FilterScope(heap ?? []), [heap])
+    const listRef = useListRef(null)
+
     const [appliedFilter, setAppliedFilter] = useState<
         (
             a: NormalizedAllocation,
@@ -31,8 +42,7 @@ export default function SearchTab() {
     >(() => {
         return () => true
     })
-    const scope = useMemo(() => new FilterScope(heap ?? []), [heap])
-    const listRef = useListRef(null)
+
     const { filtered, errorMessage } = useMemo<{
         filtered: NormalizedAllocation[]
         errorMessage: string | null
@@ -67,6 +77,10 @@ export default function SearchTab() {
             .map(Number)
             .sort((a, b) => a - b)
     }, [grouped])
+
+    useEffect(() => {
+        setAvailableGroupIds(availableGroupIds)
+    }, [availableGroupIds, setAvailableGroupIds])
 
     const listItems = useMemo(() => {
         const items: ListItem[] = []
@@ -108,6 +122,10 @@ export default function SearchTab() {
         },
         [listItems, listRef]
     )
+
+    useEffect(() => {
+        setOnGotoGroup(handleGotoGroup)
+    }, [handleGotoGroup, setOnGotoGroup])
 
     useEffect(() => {
         const updateHeight = () => {
@@ -179,7 +197,6 @@ export default function SearchTab() {
                     </Typography>
                 )}
             </Box>
-            <GotoGroupDialog onGotoGroup={handleGotoGroup} availableGroupIds={availableGroupIds} />
         </Box>
     )
 }

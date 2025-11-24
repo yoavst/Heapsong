@@ -3,7 +3,7 @@ import { Box, Button, Paper, Typography, useTheme } from '@mui/material'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 
 interface DropFileProps {
-    onData: (data: string) => void
+    onData: (data: string, fileName?: string) => void
     samplePath?: string
 }
 
@@ -30,7 +30,10 @@ export default function DropFile({ samplePath, onData }: DropFileProps) {
                 setDragOver(false)
                 const file = e.dataTransfer.files.item(0)
                 if (file !== null) {
-                    void loadFromFile(file).then(onData)
+                    const fileName = file.name.replace(/\.[^/.]+$/, '') || undefined
+                    void loadFromFile(file).then((data) => {
+                        onData(data, fileName)
+                    })
                 }
             }}
             elevation={dragOver ? 8 : 2}
@@ -65,7 +68,9 @@ export default function DropFile({ samplePath, onData }: DropFileProps) {
                         variant="contained"
                         onClick={(e) => {
                             e.stopPropagation()
-                            void loadFromClipboard().then(onData)
+                            void loadFromClipboard().then((data) => {
+                                onData(data)
+                            })
                         }}
                     >
                         Use Clipboard
@@ -92,7 +97,10 @@ export default function DropFile({ samplePath, onData }: DropFileProps) {
                 onChange={(e) => {
                     const file = e.currentTarget.files?.item(0)
                     if (file) {
-                        void loadFromFile(file).then(onData)
+                        const fileName = file.name.replace(/\.[^/.]+$/, '') || undefined
+                        void loadFromFile(file).then((data) => {
+                            onData(data, fileName)
+                        })
                     }
                     // Reset input so selecting the same file again still triggers onChange
                     if (fileInputRef.current) fileInputRef.current.value = ''

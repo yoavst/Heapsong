@@ -1,75 +1,53 @@
 import { Box } from '@mui/material'
-import TopBar from '../components/TopBar'
-import Sidebar from '../components/sidebar/Sidebar'
+import TopBar, { TopBarHandle } from '../components/topbar/TopBar'
+import TabContentView from '../components/TabContentView'
 import { useAtom } from 'jotai'
-import { heapAllocationsAtom, sidebarWidthAtom } from '../state/atoms'
-import { useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import GotoDialog from '../components/visualizer/GotoDialog'
-import Visualization from '../components/visualizer/Visualization'
+import { tabsAtom, activeTabIdAtom, defaultFiltersAtom, Tab } from '../state/atoms'
+import { useRef } from 'react'
 
 export default function VisualizerScreen() {
-    const [heap] = useAtom(heapAllocationsAtom)
+    const [tabs, setTabs] = useAtom(tabsAtom)
+    const [activeTabId, setActiveTabId] = useAtom(activeTabIdAtom)
+    const [defaultFilters] = useAtom(defaultFiltersAtom)
+    const topBarRef = useRef<TopBarHandle>(null)
 
-    const [sidebarWidth, setSidebarWidth] = useAtom(sidebarWidthAtom)
-    const [dragging, setDragging] = useState(false)
-    const dividerRef = useRef<HTMLDivElement | null>(null)
+    // Ensure there's always at least one tab
 
-    const navigate = useNavigate()
-    useEffect(() => {
-        function onMove(e: MouseEvent) {
-            if (!dragging) return
-            e.preventDefault()
-            setSidebarWidth(Math.max(260, Math.min(640, window.innerWidth - e.clientX)))
+    if (tabs.length === 0) {
+        const newTab: Tab = {
+            id: 0,
+            name: 'Untitled',
+            heapAllocations: null,
+            appliedFilters: { ...defaultFilters },
         }
-        function onUp() {
-            setDragging(false)
-        }
-        if (dragging) {
-            // Prevent text selection during drag
-            document.body.style.userSelect = 'none'
-            window.addEventListener('mousemove', onMove)
-            window.addEventListener('mouseup', onUp)
-        }
-        return () => {
-            // Restore text selection when done dragging
-            document.body.style.userSelect = ''
-            window.removeEventListener('mousemove', onMove)
-            window.removeEventListener('mouseup', onUp)
-        }
-    }, [dragging, setSidebarWidth])
-
-    if (!heap) {
-        void navigate('/')
-        return
+        setTabs([newTab])
+        setActiveTabId(0)
+        return <></>
     }
 
     return (
         <Box sx={{ height: '100vh', width: '100vw', display: 'flex', flexDirection: 'column' }}>
-            <TopBar />
-            <Box
-                sx={{
-                    flex: 1,
-                    width: '100%',
-                    display: 'grid',
-                    gridTemplateColumns: `1fr 6px ${sidebarWidth}px`,
-                    minHeight: 0,
-                }}
-            >
-                <Visualization />
-                <Box
-                    ref={dividerRef}
-                    onMouseDown={(e) => {
-                        e.preventDefault()
-                        setDragging(true)
-                    }}
-                    sx={{ cursor: 'col-resize', bgcolor: dragging ? 'primary.main' : 'divider' }}
-                />
-                <Box sx={{ borderLeft: 1, borderColor: 'divider', minWidth: 240 }}>
-                    <Sidebar />
-                </Box>
+            <TopBar ref={topBarRef} />
+            <Box sx={{ flex: 1, position: 'relative', minHeight: 0 }}>
+                {tabs.map((tab) => (
+                    <TabContentView
+                        key={tab.id}
+                        isActive={activeTabId === tab.id}
+                        heapAllocations={tab.heapAllocations}
+                        appliedFilters={tab.appliedFilters}
+                        setAppliedFilters={(filters) => {
+                            setTabs((currentTabs) =>
+                                currentTabs.map((t) =>
+                                    t.id === tab.id ? { ...t, appliedFilters: filters } : t
+                                )
+                            )
+                        }}
+                        onData={(data: string, fileName?: string) => {
+                            topBarRef.current?.onData(data, fileName)
+                        }}
+                    />
+                ))}
             </Box>
-            <GotoDialog />
         </Box>
     )
 }

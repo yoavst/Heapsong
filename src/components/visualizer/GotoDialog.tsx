@@ -1,24 +1,40 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material'
-import { useAtom, useSetAtom } from 'jotai'
-import { useCallback, useState } from 'react'
-import {
-    appliedFiltersAtom,
-    heapAllocationsRangeAtom,
-    highlightAtom,
-    gotoDialogOpenAtom,
-} from '../../state/atoms'
+import { useAtom } from 'jotai'
+import { useCallback, useState, useMemo } from 'react'
 import { formatHex } from '../../utils/formatting'
 import HexInput from '../HexInput'
 import { useToast } from '../ToastContext'
 import { useHotkeys } from 'react-hotkeys-hook'
+import { NormalizedAllocation, AppliedFilters } from '../../types'
+import { gotoDialogOpenAtom } from '../../state/atoms'
 
-export default function GotoDialog() {
+interface GotoDialogProps {
+    appliedFilters: AppliedFilters
+    heapAllocations: NormalizedAllocation[] | null
+    setHighlight: (addr: bigint | null) => void
+}
+
+export default function GotoDialog({
+    appliedFilters,
+    heapAllocations,
+    setHighlight,
+}: GotoDialogProps) {
     const [open, setOpen] = useAtom(gotoDialogOpenAtom)
     const [input, setInput] = useState<bigint | null>(null)
-    const [appliedFilters] = useAtom(appliedFiltersAtom)
-    const [heapAllocationsRange] = useAtom(heapAllocationsRangeAtom)
-    const setHighlight = useSetAtom(highlightAtom)
     const { show } = useToast()
+
+    const heapAllocationsRange = useMemo<[base: bigint, end: bigint] | null>(() => {
+        if (!heapAllocations || heapAllocations.length === 0) return null
+        let base = heapAllocations[0].address
+        let end = heapAllocations[0].address + heapAllocations[0].actualSize
+
+        for (const heapAllocation of heapAllocations) {
+            if (heapAllocation.address < base) base = heapAllocation.address
+            const allocEnd = heapAllocation.address + heapAllocation.actualSize
+            if (allocEnd > end) end = allocEnd
+        }
+        return [base, end]
+    }, [heapAllocations])
 
     useHotkeys(
         'g',
