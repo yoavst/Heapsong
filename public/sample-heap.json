@@ -9,6 +9,15 @@
         "note": "startup block"
     },
     {
+        "type": "INIT2",
+        "address": "0x100a0",
+        "size": "0x80",
+        "actualSize": 160,
+        "color": "#64B5F6",
+        "groupId": 1,
+        "note": "startup block"
+    },
+    {
         "type": "STRING",
         "address": "0x10400",
         "size": 96,
@@ -29,7 +38,22 @@
         "color": "#FFB74D",
         "groupId": 2,
         "elements": 64,
-        "elementsValues": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, { "value": 12 }]
+        "elementsValues": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            {
+                "value": 12
+            }
+        ]
     },
     {
         "type": "NODE",

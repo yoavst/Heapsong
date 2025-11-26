@@ -91,15 +91,29 @@ export function buildRows(
         const targetBase = base + startIndex * rowSize
 
         // compute how many full rows we are away from last existing row
-        const gapRows = Number((targetBase - lastRow().base) / rowSize - 1n)
-        if (gapRows >= 0) {
+        const lastRowBase = lastRow().base
+        const lastRowEnd = lastRowBase + lastRow().size
+
+        if (targetBase >= lastRowEnd) {
+            // Target is at or after the end of the last row
             // close the previous row
             flushRow(lastRow())
-            // fill the gap
-            addEmptyRows(gapRows)
-            // ensure we have the target row
-            if (lastRow().base + lastRow().size !== targetBase)
+
+            if (targetBase > lastRowEnd) {
+                // There's a gap - fill it with empty rows
+                const gapSize = targetBase - lastRowEnd
+                const gapRows = Number(gapSize / rowSize)
+                addEmptyRows(gapRows)
+            }
+
+            // Ensure we have the target row
+            // After addEmptyRows (if called), lastRow should end at targetBase
+            // We need to create the row starting at targetBase for this allocation
+            const currentEnd = lastRow().base + lastRow().size
+            if (currentEnd <= targetBase) {
+                // Create the target row (adjacent if currentEnd == targetBase, or after gap)
                 rows.push(makeNextRow(lastRow(), rowSize))
+            }
         }
 
         // fill across rows
