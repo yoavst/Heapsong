@@ -27,7 +27,21 @@ export default function ActionButtons({ activeTab }: ActionButtonsProps) {
 
         const inputAllocations = activeTab.heapAllocations.map(convertToInputFormat)
         const json = JSON.stringify(inputAllocations, null, 4)
-        downloadFile(json, 'heap-export.json', 'application/json')
+
+        // Generate filename from tab name, sanitize it, and ensure .json extension
+        let filename = activeTab.name || 'heap-export'
+        // Remove invalid filename characters
+        filename = filename.replace(/[<>:"/\\|?*]/g, '').trim()
+        // Add .json extension if not present
+        if (!filename.toLowerCase().endsWith('.json')) {
+            filename += '.json'
+        }
+        // Fallback if filename is empty after sanitization
+        if (!filename || filename === '.json') {
+            filename = 'heap-export.json'
+        }
+
+        downloadFile(json, filename, 'application/json')
     }, [activeTab, show])
 
     useHotkeys(
