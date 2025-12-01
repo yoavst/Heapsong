@@ -29,7 +29,9 @@ export default function TabContentView({
     const [dragging, setDragging] = useState(false)
     const dividerRef = useRef<HTMLDivElement | null>(null)
     const [availableGroupIds, setAvailableGroupIds] = useState<number[]>([])
-    const [onGotoGroup, setOnGotoGroup] = useState<((groupId: number) => void) | null>(null)
+    const [onGotoGroup, setOnGotoGroup] = useState<((groupId: number) => void)>(() => {
+        return (_groupId: number) => { /* empty */ }
+    })
     const [selected, setSelected] = useState<bigint | null>(null)
     const [highlight, setHighlight] = useState<bigint | null>(null)
 
@@ -128,9 +130,7 @@ export default function TabContentView({
                         setHighlight={setHighlight}
                     />
                     <GotoGroupDialog
-                        onGotoGroup={(groupId) => {
-                            onGotoGroup?.(groupId)
-                        }}
+                        onGotoGroup={onGotoGroup}
                         availableGroupIds={availableGroupIds}
                     />
                 </>

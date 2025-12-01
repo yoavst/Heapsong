@@ -124,7 +124,7 @@ export default function SearchTab({
     )
 
     useEffect(() => {
-        setOnGotoGroup(handleGotoGroup)
+        setOnGotoGroup(() => handleGotoGroup)
     }, [handleGotoGroup, setOnGotoGroup])
 
     useEffect(() => {
