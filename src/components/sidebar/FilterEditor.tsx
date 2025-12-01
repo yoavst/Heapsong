@@ -243,6 +243,14 @@ export class FilterScope {
                 (extraFilter ? extraFilter(a2) : true)
         )
     }
+
+    allocationsAt(address: bigint | number): NormalizedAllocation[] {
+        return this.allocations.filter((a) => a.address === BigInt(address))
+    }
+
+    allocationAt(address: bigint | number): NormalizedAllocation | null {
+        return this.allocations.find((a) => a.address === BigInt(address)) ?? null
+    }
 }
 
 const createFilter = (
