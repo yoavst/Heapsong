@@ -36,14 +36,14 @@ export function buildRows(
 ): RowEntry[] {
     if (allocs.length === 0) return []
 
-    const rows: RowEntry[] = []
+    const rows = new Map<bigint, RowEntry>()
     const halfEmpty = Math.floor(MAX_UNALLOCATED_ROWS / 2)
     const rowSizeNumber = Number(rowSize)
 
     // Start with first row covering first allocation's row
     const firstIndex = (allocs[0].address - base) / rowSize
-    rows.push(makeRow(base + firstIndex * rowSize, rowSize))
-    const lastRow = () => rows[rows.length - 1]
+    const firstRow = makeRow(base + firstIndex * rowSize, rowSize)
+    rows.set(firstRow.base, firstRow)
 
     // Compute internal gaps for the current row
     const flushRow = (row: RowEntry) => {
@@ -65,61 +65,14 @@ export function buildRows(
         }
     }
 
-    const addEmptyRows = (count: number) => {
-        if (count <= 0) return
-        else if (collapse.enabled && count >= collapse.threshold) {
-            // Add all empty rows as a single collapsed region
-            rows.push(makeNextRow(lastRow(), BigInt(count) * rowSize, true))
-        } else if (count > MAX_UNALLOCATED_ROWS) {
-            // pre-empty
-            for (let i = 0; i < halfEmpty; i++) rows.push(makeNextRow(lastRow(), rowSize))
-            // collapsed region
-            const collapsedRows = count - MAX_UNALLOCATED_ROWS
-            rows.push(makeNextRow(lastRow(), BigInt(collapsedRows) * rowSize, true))
-            // post-empty
-            for (let i = 0; i < halfEmpty; i++) rows.push(makeNextRow(lastRow(), rowSize))
-        } else {
-            // Add all empty rows individually
-            for (let i = 0; i < count; i++) rows.push(makeNextRow(lastRow(), rowSize))
-        }
-    }
-
     // main allocation loop
     for (const a of allocs) {
         const startIndex = (a.address - base) / rowSize
         const endIndex = (a.address + a.actualSize - base - 1n) / rowSize
-        const targetBase = base + startIndex * rowSize
 
-        // compute how many full rows we are away from last existing row
-        const lastRowBase = lastRow().base
-        const lastRowEnd = lastRowBase + lastRow().size
-
-        if (targetBase >= lastRowEnd) {
-            // Target is at or after the end of the last row
-            // close the previous row
-            flushRow(lastRow())
-
-            if (targetBase > lastRowEnd) {
-                // There's a gap - fill it with empty rows
-                const gapSize = targetBase - lastRowEnd
-                const gapRows = Number(gapSize / rowSize)
-                addEmptyRows(gapRows)
-            }
-
-            // Ensure we have the target row
-            // After addEmptyRows (if called), lastRow should end at targetBase
-            // We need to create the row starting at targetBase for this allocation
-            const currentEnd = lastRow().base + lastRow().size
-            if (currentEnd <= targetBase) {
-                // Create the target row (adjacent if currentEnd == targetBase, or after gap)
-                rows.push(makeNextRow(lastRow(), rowSize))
-            }
-        }
-
-        // fill across rows
         if (endIndex - startIndex > 0x100) {
             // TOOO: Let's just ignore it for now, better skip it
-            console.log('Error with allocation', a)
+            console.log('Error with allocation: too big', a)
             continue
         }
 
@@ -139,10 +92,14 @@ export function buildRows(
                 segLenNumber > 0 ? (Number(requestedInSeg) / segLenNumber) * 100 : 0
             allocRemaining -= requestedInSeg
 
-            // ensure we have a row for segBase
-            if (lastRow().base !== segBase) rows.push(makeNextRow(lastRow(), rowSize))
+            // Find or create row for segBase
+            let targetRow = rows.get(segBase)
+            if (!targetRow) {
+                targetRow = makeRow(segBase, rowSize)
+                rows.set(segBase, targetRow)
+            }
 
-            lastRow().allocs.push({
+            targetRow.allocs.push({
                 address: a.address,
                 leftPct,
                 widthPct,
@@ -156,9 +113,41 @@ export function buildRows(
         }
     }
 
-    // flush last
-    flushRow(lastRow())
-    return rows
+    // Sort rows by base (may be out of order)
+    const sortedRows = [...rows.values()]
+    sortedRows.sort((a, b) => (a.base < b.base ? -1 : a.base > b.base ? 1 : 0))
+    // compute gaps inside rows
+    for (const row of sortedRows) flushRow(row)
+    // Compute gaps between rows
+    const finalRows: RowEntry[] = [sortedRows[0]]
+    const lastRow = () => finalRows[finalRows.length - 1]
+    const pushNextRow = (size: bigint = rowSize, collapsed = false) =>
+        finalRows.push(makeRow(lastRow().base + rowSize, size, collapsed))
+    const MAX_UNALLOCATED_ROWS_ = BigInt(MAX_UNALLOCATED_ROWS)
+    for (let i = 1; i < sortedRows.length; i++) {
+        const row = sortedRows[i]
+        const count = (row.base - (lastRow().base + rowSize)) / rowSize
+        if (count > 0) {
+            if (collapse.enabled && count >= collapse.threshold) {
+                // Add all empty rows as a single collapsed region
+                pushNextRow(count * rowSize, true)
+            } else if (count > MAX_UNALLOCATED_ROWS_) {
+                // pre-empty
+                for (let i = 0; i < halfEmpty; i++) pushNextRow()
+                // collapsed region
+                const collapsedRows = count - MAX_UNALLOCATED_ROWS_
+                pushNextRow(collapsedRows * rowSize, true)
+                // post-empty
+                for (let i = 0; i < halfEmpty; i++) pushNextRow()
+            } else {
+                // Add all empty rows individually
+                for (let i = 0; i < count; i++) pushNextRow()
+            }
+        }
+        finalRows.push(row)
+    }
+
+    return finalRows
 }
 
 const makeRow = (base: bigint, size: bigint, collapsed = false): RowEntry => ({
@@ -168,6 +157,3 @@ const makeRow = (base: bigint, size: bigint, collapsed = false): RowEntry => ({
     gaps: [],
     collapsed,
 })
-
-const makeNextRow = (currentRow: RowEntry, size: bigint, collapsed = false): RowEntry =>
-    makeRow(currentRow.base + currentRow.size, size, collapsed)
