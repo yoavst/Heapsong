@@ -1,6 +1,8 @@
-import { useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { Box, Button, Paper, Typography, useTheme } from '@mui/material'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
+import { useHotkeys } from 'react-hotkeys-hook'
+import { getMetaKey } from '../utils/os'
 
 interface DropFileProps {
     onData: (data: string, fileName?: string) => void
@@ -11,6 +13,16 @@ export default function DropFile({ samplePath, onData }: DropFileProps) {
     const fileInputRef = useRef<HTMLInputElement>(null)
     const [dragOver, setDragOver] = useState(false)
     const theme = useTheme()
+
+    const handlePasteFromClipboard = useCallback(() => {
+        void loadFromClipboard().then((data) => {
+            onData(data)
+        })
+    }, [onData])
+
+    useHotkeys(`${getMetaKey()}+v`, handlePasteFromClipboard, { preventDefault: true }, [
+        handlePasteFromClipboard,
+    ])
 
     return (
         <Paper
@@ -68,9 +80,7 @@ export default function DropFile({ samplePath, onData }: DropFileProps) {
                         variant="contained"
                         onClick={(e) => {
                             e.stopPropagation()
-                            void loadFromClipboard().then((data) => {
-                                onData(data)
-                            })
+                            handlePasteFromClipboard()
                         }}
                     >
                         Use Clipboard
