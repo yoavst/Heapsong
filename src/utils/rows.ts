@@ -45,26 +45,6 @@ export function buildRows(
     const firstRow = makeRow(base + firstIndex * rowSize, rowSize)
     rows.set(firstRow.base, firstRow)
 
-    // Compute internal gaps for the current row
-    const flushRow = (row: RowEntry) => {
-        if (row.collapsed) return
-        const sorted = row.allocs.sort((x, y) => x.leftPct - y.leftPct)
-        let cursor = 0
-        for (const a of sorted) {
-            if (a.leftPct > cursor) {
-                const widthPct = a.leftPct - cursor
-                const size = BigInt(Math.round((widthPct / 100) * rowSizeNumber))
-                row.gaps.push({ leftPct: cursor, widthPct, sizeHex: formatHex(size) })
-            }
-            cursor = Math.min(100, a.leftPct + a.widthPct)
-        }
-        if (cursor < 100) {
-            const widthPct = 100 - cursor
-            const size = BigInt(Math.round((widthPct / 100) * rowSizeNumber))
-            row.gaps.push({ leftPct: cursor, widthPct, sizeHex: formatHex(size) })
-        }
-    }
-
     // main allocation loop
     for (const a of allocs) {
         const startIndex = (a.address - base) / rowSize
@@ -116,8 +96,6 @@ export function buildRows(
     // Sort rows by base (may be out of order)
     const sortedRows = [...rows.values()]
     sortedRows.sort((a, b) => (a.base < b.base ? -1 : a.base > b.base ? 1 : 0))
-    // compute gaps inside rows
-    for (const row of sortedRows) flushRow(row)
     // Compute gaps between rows
     const finalRows: RowEntry[] = [sortedRows[0]]
     const lastRow = () => finalRows[finalRows.length - 1]
@@ -146,8 +124,61 @@ export function buildRows(
         }
         finalRows.push(row)
     }
+    flushRows(finalRows)
 
     return finalRows
+}
+
+const flushRows = (rows: RowEntry[]) => {
+    let prevAlloc: RowAllocSegment | null = null
+    let lastRow: RowEntry | null = null
+    const pendingGaps: RowGap[] = []
+
+    for (const row of rows) {
+        if (row.collapsed) continue
+        lastRow = row
+
+        row.allocs.sort((x, y) => x.leftPct - y.leftPct)
+        let cursor = 0
+
+        for (const a of row.allocs) {
+            // Gap size from previous allocation to this one
+            const gapSize = prevAlloc
+                ? a.address - (prevAlloc.address + prevAlloc.actualSize)
+                : a.address - row.base
+            const sizeHex = formatHex(gapSize)
+
+            // Resolve all pending gaps (trailing gaps from previous rows + empty rows)
+            for (const gap of pendingGaps) gap.sizeHex = sizeHex
+            pendingGaps.length = 0
+
+            // Add leading gap if there's space before this allocation
+            if (a.leftPct > cursor) {
+                const widthPct = a.leftPct - cursor
+                row.gaps.push({ leftPct: cursor, widthPct, sizeHex })
+            }
+
+            cursor = Math.min(100, a.leftPct + a.widthPct)
+            prevAlloc = a
+        }
+
+        // Handle trailing gap - size will be resolved when we find the next allocation
+        if (cursor < 100) {
+            const widthPct = 100 - cursor
+            const gap: RowGap = { leftPct: cursor, widthPct, sizeHex: '' }
+            row.gaps.push(gap)
+            pendingGaps.push(gap)
+        }
+    }
+
+    // Resolve remaining pending gaps (no next allocation exists)
+    if (pendingGaps.length > 0 && lastRow) {
+        const gapSize = prevAlloc
+            ? lastRow.base + lastRow.size - (prevAlloc.address + prevAlloc.actualSize)
+            : lastRow.size
+        const sizeHex = formatHex(gapSize)
+        for (const gap of pendingGaps) gap.sizeHex = sizeHex
+    }
 }
 
 const makeRow = (base: bigint, size: bigint, collapsed = false): RowEntry => ({
