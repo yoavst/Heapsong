@@ -36,7 +36,10 @@ function Row({
     addrWidth,
 }: RowComponentProps<RowProps>) {
     const row = rows[index]
-    const selectedInRow = selected != null && row.base <= selected && selected < row.base + row.size
+    const selectedInRow =
+        selected != null &&
+        selected < row.base + row.size &&
+        row.allocs.some((a) => a.address === selected)
     const highlightInRow =
         highlight != null && row.base <= highlight && highlight < row.base + row.size
 
