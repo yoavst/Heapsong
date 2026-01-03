@@ -153,7 +153,7 @@ const flushRows = (rows: RowEntry[]) => {
             pendingGaps.length = 0
 
             // Add leading gap if there's space before this allocation
-            if (a.leftPct > cursor) {
+            if (gapSize > 0) {
                 const widthPct = a.leftPct - cursor
                 row.gaps.push({ leftPct: cursor, widthPct, sizeHex })
             }
@@ -163,7 +163,7 @@ const flushRows = (rows: RowEntry[]) => {
         }
 
         // Handle trailing gap - size will be resolved when we find the next allocation
-        if (cursor < 100) {
+        if (prevAlloc == null || prevAlloc.address + prevAlloc.actualSize < row.base + row.size) {
             const widthPct = 100 - cursor
             const gap: RowGap = { leftPct: cursor, widthPct, sizeHex: '' }
             row.gaps.push(gap)
